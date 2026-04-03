@@ -36,3 +36,5 @@ export function AdBanner({ slot, format = 'auto', className = '' }: Props) {
     </div>
   );
 }
+
+export default AdBanner;

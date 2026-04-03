@@ -1,74 +1,57 @@
 import Link from 'next/link';
 import { PostMeta } from '@/lib/posts';
 
-const CATEGORY_EMOJI: Record<string, string> = {
-  'writing-ai': '✍️',
-  'image-ai': '🎨',
-  'video-ai': '🎬',
-  'code-ai': '💻',
-  'productivity-ai': '⚡',
-  'open-source-ai': '🔓',
+const POST_TYPE_LABELS: Record<string, string> = {
+  NEW_TOOL_REVIEW: '신규 리뷰',
+  VS_COMPARISON: 'VS 비교',
+  PRICING_GUIDE: '가격 가이드',
+  UPDATE_SUMMARY: '업데이트',
+  HOW_TO_GUIDE: '활용법',
 };
 
-interface Props {
-  post: PostMeta;
-}
+const POST_TYPE_COLORS: Record<string, string> = {
+  NEW_TOOL_REVIEW: '#10b981',
+  VS_COMPARISON: '#f59e0b',
+  PRICING_GUIDE: '#3b82f6',
+  UPDATE_SUMMARY: '#8b5cf6',
+  HOW_TO_GUIDE: '#64748b',
+};
 
-export function PostCard({ post }: Props) {
-  const catEmoji = CATEGORY_EMOJI[post.category] ?? '🤖';
+// named export와 default export 모두 지원 (기존 import 호환)
+export function PostCard({ post }: { post: PostMeta }) {
+  const typeColor = POST_TYPE_COLORS[post.postType] ?? '#64748b';
+  const typeLabel = POST_TYPE_LABELS[post.postType] ?? post.postType;
 
   return (
-    <Link href={`/blog/${post.slug}`} className="block group">
-      <article
-        style={{ borderRadius: 16, transition: 'border-color 0.2s, transform 0.2s' }}
-        className="glass-card h-full overflow-hidden group-hover:-translate-y-1"
-      >
-        {post.coverImage && (
-          <div className="w-full h-44 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          </div>
-        )}
-        <div className="p-5">
-          {/* 카테고리 + 평점 */}
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <span style={{ background: 'rgba(245,158,11,0.08)', color: 'var(--accent-amber)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 20, padding: '2px 10px', fontSize: 12 }}>
-              {catEmoji} {post.category}
+    <Link href={`/blog/${post.slug}`}
+      className="block glass-card rounded-xl p-5 hover:opacity-90 transition-opacity">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
+          style={{ background: `${typeColor}22`, color: typeColor }}>
+          {typeLabel}
+        </span>
+        <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+          {post.lastUpdated}
+        </span>
+      </div>
+      <h3 className="font-bold mb-2 line-clamp-2" style={{ color: 'var(--text-primary)' }}>
+        {post.title}
+      </h3>
+      <p className="text-sm line-clamp-2 mb-3" style={{ color: 'var(--text-secondary)' }}>
+        {post.summary}
+      </p>
+      {post.tools.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {post.tools.slice(0, 4).map(tool => (
+            <span key={tool} className="text-xs px-2 py-0.5 rounded"
+              style={{ background: 'var(--bg-secondary)', color: 'var(--accent-amber)' }}>
+              {tool}
             </span>
-            {post.rating && (
-              <span style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--accent-green)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 20, padding: '2px 10px', fontSize: 12 }}>
-                ★ {post.rating}/5
-              </span>
-            )}
-          </div>
-
-          {/* 제목 */}
-          <h2 className="font-bold text-base mb-2 leading-snug" style={{ color: 'var(--text-primary)' }}>
-            {post.title}
-          </h2>
-
-          {/* 요약 */}
-          <p className="text-sm line-clamp-3 mb-4" style={{ color: 'var(--text-secondary)' }}>
-            {post.summary}
-          </p>
-
-          {/* 도구 태그 */}
-          {post.tools.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-3">
-              {post.tools.slice(0, 3).map(tool => (
-                <span key={tool} style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)', borderRadius: 4, padding: '1px 6px', fontSize: 11 }}>
-                  {tool}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* 날짜 */}
-          <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--text-secondary)' }}>
-            <span>{post.date}</span>
-          </div>
+          ))}
         </div>
-      </article>
+      )}
     </Link>
   );
 }
+
+export default PostCard;

@@ -8,8 +8,18 @@ import { TableOfContents } from '@/components/TableOfContents';
 import { AdBanner } from '@/components/AdBanner';
 import { ShareButtons } from '@/components/ShareButtons';
 import { ReadingProgress } from '@/components/ReadingProgress';
-import { ContentToggle } from '@/components/ContentToggle';
+import ComparisonTable from '@/components/ComparisonTable';
+import PricingCard from '@/components/PricingCard';
+import ToolRating from '@/components/ToolRating';
+import FaqSection from '@/components/FaqSection';
 import Link from 'next/link';
+
+const MDX_COMPONENTS = {
+  ComparisonTable,
+  PricingCard,
+  ToolRating,
+  FaqSection,
+};
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -67,7 +77,7 @@ export default async function BlogPostPage({ params }: Props) {
                 <span style={{ background: 'rgba(245,158,11,0.1)', color: 'var(--accent-amber)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
                   {post.category}
                 </span>
-                <span style={{ background: 'rgba(245,158,11,0.05)', color: 'var(--accent-amber-light)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
+                <span style={{ background: 'rgba(245,158,11,0.05)', color: 'var(--accent-amber)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
                   {post.postType.replace(/_/g, ' ')}
                 </span>
                 {post.rating && (
@@ -101,15 +111,10 @@ export default async function BlogPostPage({ params }: Props) {
 
             <AdBanner slot="2345678901" className="mb-8" />
 
-            {/* MDX 본문 */}
-            <ContentToggle
-              expertContent={
-                <div className="prose">
-                  <MDXRemote source={content} />
-                </div>
-              }
-              easyContent={null}
-            />
+            {/* MDX 본문 — 신규 컴포넌트 포함 */}
+            <div className="prose prose-invert max-w-none">
+              <MDXRemote source={content} components={MDX_COMPONENTS} />
+            </div>
 
             <AdBanner slot="3456789012" className="mt-10" />
 
@@ -139,10 +144,10 @@ export default async function BlogPostPage({ params }: Props) {
         {/* 관련 포스트 */}
         {relatedPosts.length > 0 && (
           <section className="mt-16 pt-10" style={{ borderTop: '1px solid var(--border)' }}>
-            <h2 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--accent-amber)' }}>
-              관련 도구 리뷰
+            <h2 className="text-lg font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
+              관련 글
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {relatedPosts.map((p) => (
                 <PostCard key={p.slug} post={p} />
               ))}
