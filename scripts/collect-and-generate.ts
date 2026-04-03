@@ -78,7 +78,7 @@ async function main() {
   console.log(`📅 날짜: ${new Date().toISOString()}`);
 
   console.log('\n📡 RSS 수집 중...');
-  const topItems = await collectTopItems(2);
+  const topItems = await collectTopItems(10);
 
   if (topItems.length === 0) {
     console.log('수집된 아이템 없음 — 종료');
