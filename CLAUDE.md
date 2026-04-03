@@ -1,39 +1,27 @@
-# CLAUDE.md (과학블로그 프로젝트 — 프로젝트 루트에 배치)
+# CLAUDE.md (aiscout 프로젝트)
 
 ## 프로젝트 정보
+- 이름: AI Scout (aiscout)
+- 스택: Next.js 16 App Router + TypeScript + Tailwind CSS v4 + MDX
+- 배포: Vercel (git push 시 자동 배포)
+- 자동화: GitHub Actions Cron (매일 09:00 KST)
 
-- 이름: 과학블로그 (한국어 생명과학 논문 해설)
-- 스택: Next.js 15 (App Router) + Vercel
-- API: Anthropic API (난이도 토글), CrossRef API (DOI 자동 정보)
-- AdSense: ca-pub-3012911913573742
-- 배포: `npx vercel --prod` (수동)
+## 디렉토리 구조
+- `app/` — Next.js App Router 페이지
+- `components/` — React 컴포넌트 (ComparisonTable, PricingCard, ToolRating, FaqSection 포함)
+- `content/posts/` — 자동 생성 MDX 포스트
+- `lib/` — posts.ts (MDX 파싱), affiliate.ts (제휴 링크)
+- `scripts/` — 자동화 스크립트 (collect-and-generate.ts가 메인)
+- `tests/` — Vitest 테스트
 
-## 프로젝트 구조 규칙
+## 주요 명령어
+- `npm run dev` — 개발 서버
+- `npm run build` — 빌드
+- `npm test` — 테스트 실행
+- `npm run generate` — 포스트 수동 생성 (ANTHROPIC_API_KEY 필요)
 
-- app/ 디렉토리 구조 (App Router)
-- 글 데이터: content/ 또는 MDX 파일
-- API 라우트: app/api/
-- 컴포넌트: components/ (서버/클라이언트 명확히 분리)
-- 스타일: Tailwind CSS
-
-## 핵심 기능
-
-- 난이도 토글: 전문가 버전 ↔ 쉬운 버전 (Anthropic API)
-- DOI 입력 → CrossRef에서 논문 메타데이터 자동 추출
-- AdSense 광고 배치
-- SEO 최적화 (메타태그, OG 이미지)
-
-## 주의사항
-
-- Anthropic API 키는 서버 사이드에서만 사용 (클라이언트 노출 금지)
-- `'use client'` 디렉티브는 꼭 필요한 컴포넌트에만
-- 빌드 에러 시 `npx vercel --prod` 전에 `npm run build`로 로컬 확인
-- 이미지 최적화: next/image 사용 필수
-- AdSense 스크립트는 layout.tsx에 한 번만 로드
-
-## 금지 패턴
-
-- pages/ 디렉토리 사용 금지 (App Router만)
-- API 키를 클라이언트 컴포넌트에 넣지 않을 것
-- `getServerSideProps` / `getStaticProps` 금지 (App Router 방식 사용)
-- fetch에 캐시 설정 없이 사용 금지 (revalidate 명시)
+## 코딩 규칙
+- App Router 사용 (pages/ 금지)
+- Server Component 기본, Client Component 최소화
+- API 키는 서버 사이드에서만 사용
+- PostType: NEW_TOOL_REVIEW | VS_COMPARISON | PRICING_GUIDE | UPDATE_SUMMARY | HOW_TO_GUIDE
