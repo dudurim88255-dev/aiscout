@@ -10,7 +10,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return getAllTags().map((tag) => ({ tag: encodeURIComponent(tag) }));
+  return getAllTags().map((tag: string) => ({ tag: encodeURIComponent(tag) }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

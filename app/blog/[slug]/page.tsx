@@ -4,7 +4,6 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { getAllPosts, getPostBySlug, getRelatedPosts } from '@/lib/posts';
 import { PostCard } from '@/components/PostCard';
 import { buildPostMetadata, buildArticleJsonLd, buildBreadcrumbJsonLd, SITE_URL, SITE_NAME } from '@/lib/seo';
-import { PaperMetadata } from '@/components/PaperMetadata';
 import { TableOfContents } from '@/components/TableOfContents';
 import { AdBanner } from '@/components/AdBanner';
 import { ShareButtons } from '@/components/ShareButtons';
@@ -22,24 +21,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post) return {};
-  return buildPostMetadata(post);
+  const result = getPostBySlug(slug);
+  if (!result) return {};
+  return buildPostMetadata(result.meta);
 }
-
-const DIFFICULTY_CONFIG = {
-  '입문': { color: '#4fd1c5', emoji: '🟢' },
-  '중급': { color: '#f6c90e', emoji: '🟡' },
-  '심화': { color: '#f87171', emoji: '🔴' },
-};
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post) notFound();
+  const result = getPostBySlug(slug);
+  if (!result) notFound();
 
-  const diff = DIFFICULTY_CONFIG[post.difficulty] ?? DIFFICULTY_CONFIG['입문'];
-  const relatedPosts = getRelatedPosts(post.slug);
+  const { meta: post, content } = result;
+  const relatedPosts = getRelatedPosts(post.slug, post.category);
   const articleJsonLd = buildArticleJsonLd(post);
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: SITE_NAME, url: SITE_URL },
@@ -57,12 +50,12 @@ export default async function BlogPostPage({ params }: Props) {
 
       <div className="max-w-6xl mx-auto px-4 py-10">
         {/* 브레드크럼 */}
-        <nav className="text-sm mb-6 flex items-center gap-2" style={{ color: '#8b96b0' }}>
-          <Link href="/" className="hover:text-[#4fd1c5]">홈</Link>
+        <nav className="text-sm mb-6 flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+          <Link href="/" className="hover:opacity-80">홈</Link>
           <span>/</span>
-          <Link href={`/category/${post.category}`} className="hover:text-[#4fd1c5]">{post.category}</Link>
+          <Link href={`/category/${post.category}`} className="hover:opacity-80">{post.category}</Link>
           <span>/</span>
-          <span style={{ color: '#c5d8f0' }} className="truncate max-w-xs">{post.title}</span>
+          <span style={{ color: 'var(--text-primary)' }} className="truncate max-w-xs">{post.title}</span>
         </nav>
 
         <div className="lg:grid lg:grid-cols-[1fr_240px] gap-12">
@@ -71,30 +64,31 @@ export default async function BlogPostPage({ params }: Props) {
             {/* 헤더 */}
             <header className="mb-8">
               <div className="flex items-center gap-2 mb-4 flex-wrap">
-                <span style={{ background: 'rgba(79,209,197,0.1)', color: '#4fd1c5', border: '1px solid rgba(79,209,197,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
+                <span style={{ background: 'rgba(245,158,11,0.1)', color: 'var(--accent-amber)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
                   {post.category}
                 </span>
-                <span style={{ color: diff.color, background: `${diff.color}15`, border: `1px solid ${diff.color}40`, borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
-                  {diff.emoji} {post.difficulty}
+                <span style={{ background: 'rgba(245,158,11,0.05)', color: 'var(--accent-amber-light)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
+                  {post.postType.replace(/_/g, ' ')}
                 </span>
-                {post.journal && (
-                  <span style={{ background: 'rgba(124,58,237,0.1)', color: '#a78bfa', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
-                    {post.journal}
+                {post.rating && (
+                  <span style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--accent-green)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
+                    ★ {post.rating}/5
                   </span>
                 )}
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold mb-4 leading-snug" style={{ color: '#e8edf5' }}>
+              <h1 className="text-2xl md:text-3xl font-bold mb-4 leading-snug" style={{ color: 'var(--text-primary)' }}>
                 {post.title}
               </h1>
-              <p className="text-base mb-5" style={{ color: '#8b96b0', lineHeight: 1.8 }}>{post.summary}</p>
-              <div className="flex items-center gap-4 text-sm" style={{ color: '#4a5568' }}>
+              <p className="text-base mb-5" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{post.summary}</p>
+              <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 <span>{post.date}</span>
-                <span>·</span>
-                <span>{post.readingTime}</span>
+                {post.lastUpdated !== post.date && (
+                  <>
+                    <span>·</span>
+                    <span>최종 수정: {post.lastUpdated}</span>
+                  </>
+                )}
               </div>
-
-              {/* 논문 메타 */}
-              <PaperMetadata doi={post.paperDOI} journal={post.journal} date={post.date} />
 
               {/* 커버 이미지 */}
               {post.coverImage && (
@@ -107,20 +101,14 @@ export default async function BlogPostPage({ params }: Props) {
 
             <AdBanner slot="2345678901" className="mb-8" />
 
-            {/* MDX 본문 (전문가/쉬운 버전 토글) */}
+            {/* MDX 본문 */}
             <ContentToggle
               expertContent={
                 <div className="prose">
-                  <MDXRemote source={post.content} />
+                  <MDXRemote source={content} />
                 </div>
               }
-              easyContent={
-                post.easyBody ? (
-                  <div className="prose">
-                    <MDXRemote source={post.easyBody} />
-                  </div>
-                ) : null
-              }
+              easyContent={null}
             />
 
             <AdBanner slot="3456789012" className="mt-10" />
@@ -128,10 +116,10 @@ export default async function BlogPostPage({ params }: Props) {
             {/* 태그 */}
             {post.tags.length > 0 && (
               <div className="mt-8 flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
+                {post.tags.map((tag: string) => (
                   <Link key={tag} href={`/tag/${encodeURIComponent(tag)}`}
-                    style={{ background: '#131a2e', border: '1px solid #1e2a42', borderRadius: 6, padding: '4px 10px', fontSize: 12, color: '#8b96b0' }}
-                    className="hover:border-[#4fd1c5] hover:text-[#4fd1c5] transition-colors">
+                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 6, padding: '4px 10px', fontSize: 12, color: 'var(--text-secondary)' }}
+                    className="hover:opacity-80 transition-opacity">
                     #{tag}
                   </Link>
                 ))}
@@ -150,9 +138,9 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* 관련 포스트 */}
         {relatedPosts.length > 0 && (
-          <section className="mt-16 pt-10" style={{ borderTop: '1px solid #1e2a42' }}>
-            <h2 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ color: '#4fd1c5' }}>
-              <span>📚</span> 관련 논문
+          <section className="mt-16 pt-10" style={{ borderTop: '1px solid var(--border)' }}>
+            <h2 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--accent-amber)' }}>
+              관련 도구 리뷰
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((p) => (

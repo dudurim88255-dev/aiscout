@@ -1,14 +1,13 @@
 import { Metadata } from 'next';
 import { PostMeta } from './posts';
 
-export const SITE_NAME = '인간 수명 150세 가능한가?';
-export const SITE_TAGLINE = '150세 시대의 생존전략';
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://science-blog-dun.vercel.app';
-export const SITE_DESCRIPTION = '인간 수명 150세, 현실이 될 수 있을까? 역노화·오가노이드·CRISPR·줄기세포 등 최신 생명과학 연구를 쉽게 풀어 드립니다. 150세 시대를 준비하는 생존전략.';
+export const SITE_NAME = 'AI Scout';
+export const SITE_TAGLINE = 'AI 도구, 먼저 찾고 직접 검증했습니다';
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aiscout.vercel.app';
+export const SITE_DESCRIPTION = 'ChatGPT, Claude, Midjourney 등 AI 도구를 직접 사용해보고 비교 분석합니다. 가격, 기능, 한국어 지원까지 솔직하게 정리했습니다.';
 
 export function buildOgImageUrl(post: PostMeta): string {
   const params = new URLSearchParams({ title: post.title, category: post.category });
-  if (post.journal) params.set('journal', post.journal);
   return `${SITE_URL}/og?${params.toString()}`;
 }
 
@@ -28,7 +27,7 @@ export function buildPostMetadata(post: PostMeta): Metadata {
       locale: 'ko_KR',
       type: 'article',
       publishedTime: post.date,
-      modifiedTime: post.updatedAt ?? post.date,
+      modifiedTime: post.lastUpdated ?? post.date,
       tags: post.tags,
     },
     twitter: {
@@ -50,7 +49,7 @@ export function buildArticleJsonLd(post: PostMeta) {
     description: post.summary,
     image,
     author: {
-      '@type': 'Person',
+      '@type': 'Organization',
       name: SITE_NAME,
       url: `${SITE_URL}/about`,
     },
@@ -60,7 +59,7 @@ export function buildArticleJsonLd(post: PostMeta) {
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
     },
     datePublished: post.date,
-    dateModified: post.updatedAt ?? post.date,
+    dateModified: post.lastUpdated ?? post.date,
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     keywords: post.tags.join(', '),
   };

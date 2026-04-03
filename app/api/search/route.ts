@@ -14,8 +14,8 @@ export async function GET(req: NextRequest) {
       p.category.toLowerCase().includes(q)
     )
     .slice(0, 8)
-    .map(({ slug, title, summary, category, date, difficulty }) => ({
-      slug, title, summary, category, date, difficulty,
+    .map(({ slug, title, summary, category, date }) => ({
+      slug, title, summary, category, date,
     }));
 
   return NextResponse.json(results);

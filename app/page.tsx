@@ -1,16 +1,16 @@
 import Link from 'next/link';
-import { getAllPosts, CATEGORY_MAP, getAllTags } from '@/lib/posts';
+import { getAllPosts, CATEGORY_MAP } from '@/lib/posts';
 import { PostCard } from '@/components/PostCard';
 import { AdBanner } from '@/components/AdBanner';
-import { SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from '@/lib/seo';
+import { SITE_DESCRIPTION, SITE_TAGLINE } from '@/lib/seo';
 
 const CATEGORY_EMOJI: Record<string, string> = {
-  organoid: '🫁',
-  'anti-aging': '⏳',
-  genomics: '🧬',
-  'stem-cell': '🔬',
-  'drug-discovery': '💊',
-  neuroscience: '🧠',
+  'writing-ai': '✍️',
+  'image-ai': '🎨',
+  'video-ai': '🎬',
+  'code-ai': '💻',
+  'productivity-ai': '⚡',
+  'open-source-ai': '🔓',
 };
 
 export default function HomePage() {
@@ -18,8 +18,6 @@ export default function HomePage() {
   const recent = posts.slice(0, 6);
   const featured = posts[0];
 
-  // 통계
-  const journals = [...new Set(posts.map((p) => p.journal).filter(Boolean))];
   const categories = Object.keys(CATEGORY_MAP);
 
   // 태그 빈도
@@ -31,65 +29,56 @@ export default function HomePage() {
   const maxCount = topTags[0]?.[1] ?? 1;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="max-w-5xl mx-auto px-4 py-10">
 
       {/* ── 히어로 ── */}
       <section className="relative text-center py-20 mb-4 overflow-hidden rounded-3xl"
-        style={{ background: 'linear-gradient(160deg, #050e1f 0%, #091525 50%, #060c1a 100%)', border: '1px solid rgba(79,209,197,0.15)' }}>
+        style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}>
 
-        {/* 배경: 좌상단 청록 글로우 */}
-        <div style={{ position: 'absolute', top: -80, left: -80, width: 400, height: 400, background: 'radial-gradient(ellipse, rgba(79,209,197,0.1) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        {/* 배경: 우하단 퍼플 글로우 */}
-        <div style={{ position: 'absolute', bottom: -60, right: -60, width: 350, height: 350, background: 'radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -80, left: -80, width: 400, height: 400, background: 'radial-gradient(ellipse, rgba(245,158,11,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: -60, right: -60, width: 350, height: 350, background: 'radial-gradient(ellipse, rgba(245,158,11,0.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
+
         <div className="relative">
-          {/* 상태 배지 */}
           <div className="inline-flex items-center gap-2 mb-5 px-4 py-1.5 rounded-full text-xs font-bold"
-            style={{ background: 'rgba(79,209,197,0.08)', border: '1px solid rgba(79,209,197,0.35)', color: '#4fd1c5' }}>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#4fd1c5] animate-pulse" />
-            최신 생명과학 논문 해설 블로그
+            style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.35)', color: 'var(--accent-amber)' }}>
+            <span className="inline-block w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--accent-amber)' }} />
+            AI 도구 비교 & 직접 검증 블로그
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight" style={{ color: '#e8edf5' }}>
-            인간 수명{' '}
-            <span style={{ background: 'linear-gradient(90deg, #4fd1c5, #7c3aed)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              150세
-            </span>
-            {' '}가능한가?
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight" style={{ color: 'var(--text-primary)' }}>
+            <span style={{ color: 'var(--accent-amber)' }}>AI Scout</span>
           </h1>
-          <p className="text-base md:text-lg font-semibold mb-3" style={{ color: '#4fd1c5' }}>
+          <p className="text-base md:text-lg font-semibold mb-3" style={{ color: 'var(--accent-amber-light)' }}>
             {SITE_TAGLINE}
           </p>
-          <p className="text-sm md:text-base max-w-xl mx-auto mb-8" style={{ color: '#8b96b0', lineHeight: 1.9 }}>
+          <p className="text-sm md:text-base max-w-xl mx-auto mb-8" style={{ color: 'var(--text-secondary)', lineHeight: 1.9 }}>
             {SITE_DESCRIPTION}
           </p>
 
-          {/* CTA 버튼 */}
           <div className="flex flex-wrap justify-center gap-3 mb-10">
             <Link href="/blog"
-              style={{ background: 'linear-gradient(135deg, #4fd1c5, #38b2ac)', borderRadius: 10, padding: '10px 28px', color: '#020b18', fontWeight: 700, fontSize: 14, letterSpacing: '0.02em' }}
+              style={{ background: 'var(--accent-amber)', borderRadius: 10, padding: '10px 28px', color: '#0a0a0f', fontWeight: 700, fontSize: 14 }}
               className="hover:opacity-90 transition-opacity">
-              📄 전체 논문 보기
+              전체 리뷰 보기
             </Link>
-            <Link href="/category/anti-aging"
-              style={{ background: 'rgba(79,209,197,0.06)', border: '1px solid rgba(79,209,197,0.35)', borderRadius: 10, padding: '10px 28px', color: '#4fd1c5', fontWeight: 600, fontSize: 14 }}
-              className="hover:bg-[rgba(79,209,197,0.12)] transition-all">
-              ⏳ 역노화 연구 →
+            <Link href="/category/writing-ai"
+              style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: 10, padding: '10px 28px', color: 'var(--accent-amber)', fontWeight: 600, fontSize: 14 }}
+              className="hover:opacity-80 transition-opacity">
+              글쓰기 AI 비교 →
             </Link>
           </div>
 
-          {/* 실험실 대시보드 스타일 통계 */}
           <div className="flex justify-center gap-4 flex-wrap">
             {[
-              { value: posts.length, label: '논문 해설', suffix: '편' },
-              { value: categories.length, label: '연구 분야', suffix: '개' },
-              { value: journals.length, label: '저명 저널', suffix: '개' },
+              { value: posts.length, label: '리뷰', suffix: '개' },
+              { value: categories.length, label: '카테고리', suffix: '개' },
             ].map(({ value, label, suffix }) => (
               <div key={label} className="text-center px-3 py-1.5 rounded-lg"
-                style={{ background: 'rgba(79,209,197,0.05)', border: '1px solid rgba(79,209,197,0.15)', minWidth: 56 }}>
-                <div className="font-bold tabular-nums" style={{ color: '#4fd1c5', fontFamily: "'JetBrains Mono', 'Courier New', monospace", fontSize: 15 }}>
+                style={{ background: 'rgba(245,158,11,0.05)', border: '1px solid rgba(245,158,11,0.15)', minWidth: 56 }}>
+                <div className="font-bold tabular-nums" style={{ color: 'var(--accent-amber)', fontSize: 15 }}>
                   {value}{suffix}
                 </div>
-                <div style={{ color: '#4a6070', fontSize: 10 }}>{label}</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: 10 }}>{label}</div>
               </div>
             ))}
           </div>
@@ -100,21 +89,21 @@ export default function HomePage() {
 
       {/* ── 카테고리 카드 ── */}
       <section className="mb-14">
-        <h2 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ color: '#4fd1c5' }}>
-          <span>📂</span> 연구 분야
+        <h2 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--accent-amber)' }}>
+          카테고리
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {Object.entries(CATEGORY_MAP).map(([slug, { name, description }]) => {
             const count = posts.filter((p) => p.category === slug).length;
-            const emoji = CATEGORY_EMOJI[slug] ?? '📄';
+            const emoji = CATEGORY_EMOJI[slug] ?? '🤖';
             return (
               <Link key={slug} href={`/category/${slug}`}
-                style={{ background: 'linear-gradient(135deg, rgba(13,20,36,0.9) 0%, rgba(9,16,32,0.95) 100%)', border: '1px solid rgba(79,209,197,0.15)', borderRadius: 16, padding: '20px', transition: 'all 0.25s', display: 'block' }}
-                className="hover:border-[#4fd1c5] hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(79,209,197,0.15)] group">
+                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, padding: '20px', transition: 'all 0.25s', display: 'block' }}
+                className="hover:-translate-y-1 group">
                 <div className="text-2xl mb-3">{emoji}</div>
-                <div className="font-bold text-sm mb-1 group-hover:text-[#4fd1c5] transition-colors" style={{ color: '#e8edf5' }}>{name}</div>
-                <div className="text-xs mb-3 line-clamp-2" style={{ color: '#4a6070' }}>{description}</div>
-                <div className="text-xs font-semibold" style={{ color: '#4fd1c5' }}>{count}편 →</div>
+                <div className="font-bold text-sm mb-1 transition-colors" style={{ color: 'var(--text-primary)' }}>{name}</div>
+                <div className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{description}</div>
+                <div className="text-xs font-semibold" style={{ color: 'var(--accent-amber)' }}>{count}개 →</div>
               </Link>
             );
           })}
@@ -124,12 +113,12 @@ export default function HomePage() {
       {/* ── 주요 포스트 ── */}
       {featured && (
         <section className="mb-14">
-          <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#4fd1c5' }}>
-            <span>⭐</span> 주요 논문
+          <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: 'var(--accent-amber)' }}>
+            추천 리뷰
           </h2>
           <Link href={`/blog/${featured.slug}`} className="block group">
-            <article style={{ background: 'linear-gradient(135deg, #131a2e, #1a1f35)', border: '1px solid rgba(79,209,197,0.3)', borderRadius: 20, overflow: 'hidden', transition: 'border-color 0.2s' }}
-              className="md:flex hover:border-[#4fd1c5]">
+            <article style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, overflow: 'hidden', transition: 'border-color 0.2s' }}
+              className="md:flex hover:opacity-90">
               {featured.coverImage && (
                 <div className="md:w-2/5 h-56 md:h-auto overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -138,32 +127,32 @@ export default function HomePage() {
               )}
               <div className="p-8 flex flex-col justify-center">
                 <div className="flex gap-2 mb-3 flex-wrap">
-                  <span style={{ background: 'rgba(79,209,197,0.1)', color: '#4fd1c5', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
+                  <span style={{ background: 'rgba(245,158,11,0.1)', color: 'var(--accent-amber)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
                     {CATEGORY_MAP[featured.category]?.name ?? featured.category}
                   </span>
-                  {featured.journal && (
-                    <span style={{ background: 'rgba(124,58,237,0.1)', color: '#a78bfa', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
-                      {featured.journal}
+                  {featured.rating && (
+                    <span style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--accent-green)', borderRadius: 20, padding: '3px 12px', fontSize: 13 }}>
+                      ★ {featured.rating}/5
                     </span>
                   )}
                 </div>
-                <h3 className="text-xl font-bold mb-3" style={{ color: '#e8edf5' }}>{featured.title}</h3>
-                <p className="text-sm mb-4" style={{ color: '#8b96b0', lineHeight: 1.8 }}>{featured.summary}</p>
-                <span style={{ color: '#4fd1c5', fontSize: 14, fontWeight: 600 }}>자세히 보기 →</span>
+                <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{featured.title}</h3>
+                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{featured.summary}</p>
+                <span style={{ color: 'var(--accent-amber)', fontSize: 14, fontWeight: 600 }}>자세히 보기 →</span>
               </div>
             </article>
           </Link>
         </section>
       )}
 
-      {/* ── 최신 논문 ── */}
+      {/* ── 최신 리뷰 ── */}
       <section className="mb-14">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: '#4fd1c5' }}>
-            <span>🔬</span> 최신 논문 해설
+          <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: 'var(--accent-amber)' }}>
+            최신 리뷰
           </h2>
           {posts.length > 6 && (
-            <Link href="/blog" style={{ color: '#8b96b0', fontSize: 14 }} className="hover:text-[#4fd1c5]">
+            <Link href="/blog" style={{ color: 'var(--text-secondary)', fontSize: 14 }} className="hover:opacity-80">
               전체 보기 →
             </Link>
           )}
@@ -178,8 +167,8 @@ export default function HomePage() {
       {/* ── 인기 태그 ── */}
       {topTags.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: '#4fd1c5' }}>
-            <span>🏷️</span> 인기 태그
+          <h2 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: 'var(--accent-amber)' }}>
+            인기 태그
           </h2>
           <div className="flex flex-wrap gap-2">
             {topTags.map(([tag, count]) => {
@@ -189,14 +178,14 @@ export default function HomePage() {
               return (
                 <Link key={tag} href={`/tag/${encodeURIComponent(tag)}`}
                   style={{
-                    background: `rgba(79,209,197,${0.05 + ratio * 0.1})`,
-                    border: `1px solid rgba(79,209,197,${0.15 + ratio * 0.25})`,
+                    background: `rgba(245,158,11,${0.05 + ratio * 0.1})`,
+                    border: `1px solid rgba(245,158,11,${0.15 + ratio * 0.25})`,
                     borderRadius: 20,
                     padding: `4px ${Math.round(10 + ratio * 4)}px`,
-                    color: `rgba(79,209,197,${opacity})`,
+                    color: `rgba(245,158,11,${opacity})`,
                     fontSize,
                   }}
-                  className="hover:border-[#4fd1c5] hover:text-[#4fd1c5] transition-colors">
+                  className="hover:opacity-80 transition-opacity">
                   #{tag}
                   {count > 1 && <span className="ml-1 text-[10px] opacity-60">{count}</span>}
                 </Link>
