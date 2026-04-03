@@ -1,125 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #020b18;
-  --bg-card: #0d1424;
-  --bg-card2: #091020;
-  --text: #e8edf5;
-  --text-muted: #8b96b0;
-  --accent: #4fd1c5;
-  --accent2: #7c3aed;
-  --border: #1a2540;
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #13131a;
+  --bg-card: #1a1a24;
+  --accent-amber: #f59e0b;
+  --accent-amber-light: #fcd34d;
+  --accent-green: #10b981;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #2a2a3a;
 }
 
 body {
-  background-color: #020b18;
-  background-image:
-    linear-gradient(rgba(79, 209, 197, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(79, 209, 197, 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  background-attachment: fixed;
-  color: var(--text);
-  font-family: 'Noto Sans KR', 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  line-height: 1.8;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
-/* 상단 글로우 — 청록 빛번짐 */
 body::before {
   content: '';
   position: fixed;
-  top: -150px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1100px;
-  height: 750px;
-  background: radial-gradient(ellipse at center,
-    rgba(79, 209, 197, 0.18) 0%,
-    rgba(79, 209, 197, 0.06) 35%,
-    transparent 65%);
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 158, 11, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
   pointer-events: none;
   z-index: 0;
-  animation: pulse-glow 6s ease-in-out infinite;
 }
 
-/* 하단 퍼플 글로우 */
 body::after {
   content: '';
   position: fixed;
-  bottom: -200px;
-  right: -100px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.1) 0%, transparent 60%);
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
-  50%       { opacity: 1;   transform: translateX(-50%) scale(1.05); }
+main {
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-}
-
-/* 스크롤바 */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-/* 포스트 본문 타이포그래피 */
-.prose {
-  color: var(--text);
-  max-width: 720px;
-}
-.prose h2 { color: var(--accent); margin-top: 2em; margin-bottom: 0.75em; font-size: 1.5rem; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 0.5em; }
-.prose h3 { color: #c5d8f0; margin-top: 1.5em; margin-bottom: 0.5em; font-size: 1.2rem; font-weight: 600; }
-.prose p { margin-bottom: 1.2em; }
-.prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-.prose a:hover { color: #81e6d9; }
-.prose ul, .prose ol { padding-left: 1.5em; margin-bottom: 1.2em; }
-.prose li { margin-bottom: 0.4em; }
-.prose code { background: #1a2540; padding: 2px 6px; border-radius: 4px; font-size: 0.875em; font-family: 'JetBrains Mono', monospace; color: var(--accent); }
-.prose pre { background: #040d1a; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; margin-bottom: 1.5em; }
-.prose pre code { background: none; padding: 0; }
-.prose blockquote { border-left: 3px solid var(--accent); padding-left: 1.2em; color: var(--text-muted); font-style: italic; margin: 1.5em 0; }
-.prose strong { color: #fff; font-weight: 700; }
-.prose hr { border-color: var(--border); margin: 2em 0; }
-.prose table { width: 100%; border-collapse: collapse; margin-bottom: 1.5em; font-size: 0.9rem; }
-.prose th { background: #0d1424; color: var(--accent); padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
-.prose td { padding: 8px 12px; border: 1px solid var(--border); color: var(--text-muted); }
-.prose tr:hover td { background: rgba(79,209,197,0.03); }
-
-/* 하이라이트 박스 */
-.highlight-box {
-  background: linear-gradient(135deg, rgba(79, 209, 197, 0.07), rgba(124, 58, 237, 0.07));
-  border: 1px solid rgba(79, 209, 197, 0.25);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  margin: 1.5rem 0;
-  backdrop-filter: blur(4px);
-}
-
-/* 출처 박스 */
-.cite-box {
-  background: rgba(9, 16, 32, 0.8);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent2);
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin: 1.5rem 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  backdrop-filter: blur(4px);
-}
-
-/* 글래스 카드 공통 */
 .glass-card {
-  background: rgba(13, 20, 36, 0.75);
-  border: 1px solid rgba(79, 209, 197, 0.12);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(79, 209, 197, 0.06);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
 }

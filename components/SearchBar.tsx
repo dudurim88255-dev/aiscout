@@ -11,7 +11,7 @@ interface Result {
   difficulty: string;
 }
 
-export function SearchBar() {
+export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Result[]>([]);
   const [open, setOpen] = useState(false);

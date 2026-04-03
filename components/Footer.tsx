@@ -1,31 +1,17 @@
 import Link from 'next/link';
-import { SITE_NAME, SITE_TAGLINE } from '@/lib/seo';
 
-export function Footer() {
+export default function Footer() {
   return (
-    <footer style={{ borderTop: '1px solid #1e2a42', background: '#070c15' }} className="mt-16 py-10">
-      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between gap-6 text-sm" style={{ color: '#8b96b0' }}>
-        <div>
-          <div className="font-bold mb-1" style={{ color: '#4fd1c5' }}>⏳ {SITE_NAME}</div>
-          <p className="max-w-xs" style={{ color: '#8b96b0' }}>{SITE_TAGLINE}</p>
-        </div>
-        <div className="flex gap-8">
-          <div className="flex flex-col gap-2">
-            <span className="font-semibold" style={{ color: '#c5d8f0' }}>카테고리</span>
-            <Link href="/category/organoid" className="hover:text-[#4fd1c5] transition-colors">오가노이드</Link>
-            <Link href="/category/anti-aging" className="hover:text-[#4fd1c5] transition-colors">역노화</Link>
-            <Link href="/category/genomics" className="hover:text-[#4fd1c5] transition-colors">유전체학</Link>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="font-semibold" style={{ color: '#c5d8f0' }}>사이트</span>
-            <Link href="/about" className="hover:text-[#4fd1c5] transition-colors">소개</Link>
-            <Link href="/privacy" className="hover:text-[#4fd1c5] transition-colors">개인정보처리방침</Link>
-            <Link href="/contact" className="hover:text-[#4fd1c5] transition-colors">연락처</Link>
-          </div>
-        </div>
-      </div>
-      <div className="max-w-6xl mx-auto px-4 mt-6 text-xs" style={{ color: '#4a5568' }}>
-        © {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
+    <footer style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)' }}
+      className="mt-16 py-8">
+      <div className="max-w-5xl mx-auto px-4 text-center">
+        <p className="font-bold mb-1" style={{ color: 'var(--accent-amber)' }}>AI Scout</p>
+        <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+          AI 도구, 먼저 찾고 직접 검증했습니다
+        </p>
+        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+          © 2026 AI Scout. 본 블로그의 가격 정보는 변경될 수 있습니다. 최신 정보는 공식 사이트를 확인하세요.
+        </p>
       </div>
     </footer>
   );
