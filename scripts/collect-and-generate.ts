@@ -41,6 +41,9 @@ async function processOneTool(toolData: Awaited<ReturnType<typeof collectTopItem
     return false;
   }
 
+  // 코드 블록 래핑 제거 (```mdx ... ``` 또는 ``` ... ```)
+  mdxContent = mdxContent.replace(/^```[a-z]*\n/, '').replace(/\n```\s*$/, '');
+
   const { frontmatter, content } = extractFrontmatterAndContent(mdxContent);
   const contentWithLinks = insertAffiliateLinks(content, AFFILIATE_MAP);
   mdxContent = `---\n${frontmatter}\n---\n${contentWithLinks}`;
