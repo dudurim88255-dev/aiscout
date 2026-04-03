@@ -20,12 +20,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.lastUpdated ?? post.date),
-    changeFrequency: 'monthly',
-    priority: 0.9,
-  }));
+  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => {
+    const dateStr = post.lastUpdated || post.date;
+    const lastModified = dateStr ? new Date(dateStr) : now;
+    return {
+      url: `${SITE_URL}/blog/${post.slug}`,
+      lastModified: isNaN(lastModified.getTime()) ? now : lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    };
+  });
 
   const tagRoutes: MetadataRoute.Sitemap = getAllTags().map((tag) => ({
     url: `${SITE_URL}/tag/${encodeURIComponent(tag)}`,
