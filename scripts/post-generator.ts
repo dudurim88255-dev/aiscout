@@ -15,7 +15,7 @@ const SYSTEM_PROMPT = `당신은 한국의 AI 도구 전문 블로거입니다.
 9. MDX 형식으로 출력 (frontmatter 포함)
 
 절대 사용 금지: "혁신적인", "획기적인", "필수 도구", "게임체인저"
-MDX 컴포넌트 활용: ComparisonTable, PricingCard, ToolRating, FaqSection`;
+커스텀 컴포넌트 사용 금지. 일반 마크다운만 사용. 표는 마크다운 테이블, 평점은 텍스트, FAQ는 ## 제목으로 작성.`;
 
 function getPromptByType(tool: ScoredTool): string {
   const base = `도구명: ${tool.title}\n설명: ${tool.description}\n출처: ${tool.source}\n발행일: ${tool.pubDate}`;
