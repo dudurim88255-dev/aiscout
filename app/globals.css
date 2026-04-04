@@ -73,16 +73,16 @@ main {
 .prose {
   color: var(--text-primary);
   max-width: 720px;
-  font-size: 1rem;
-  line-height: 1.85;
+  font-size: 1.05rem;
+  line-height: 2;
   word-break: keep-all;
 }
 
 .prose p {
   margin-top: 0;
-  margin-bottom: 1.25em;
+  margin-bottom: 1.75em;
   color: var(--text-secondary);
-  line-height: 1.85;
+  line-height: 2;
 }
 
 .prose h1 {
