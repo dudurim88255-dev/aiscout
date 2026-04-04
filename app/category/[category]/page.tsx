@@ -17,8 +17,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const info = CATEGORY_MAP[category];
   if (!info) return {};
   return {
-    title: `${info.name} 논문 해설`,
-    description: `${info.description} 관련 최신 논문을 쉽게 풀어 설명합니다.`,
+    title: `${info.name} 도구 비교·리뷰 모음 | AI Scout`,
+    description: `${info.name} 카테고리의 AI 도구 리뷰와 비교 분석입니다. ${info.description ?? ''} 직접 써보고 가격·기능·한국어 지원을 정리했습니다.`,
+    alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/category/${category}` },
+    openGraph: {
+      title: `${info.name} AI 도구 비교·리뷰 | AI Scout`,
+      description: `${info.name} 분야 AI 도구를 직접 써보고 비교 분석합니다.`,
+      locale: 'ko_KR',
+      type: 'website',
+    },
   };
 }
 

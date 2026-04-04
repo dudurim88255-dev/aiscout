@@ -1,7 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPosts } from '@/lib/posts';
 import PostCard from '@/components/PostCard';
 import AdBanner from '@/components/AdBanner';
+import { buildPageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'AI Scout — AI 도구 비교·리뷰·사용법 총정리',
+  description: 'ChatGPT, Claude, Gemini, Midjourney 등 인기 AI 도구를 직접 써보고 비교했습니다. 가격·한국어 지원·기능까지 솔직하게 정리합니다.',
+  path: '/',
+  keywords: ['AI 도구 비교', 'AI 추천', 'ChatGPT 리뷰', 'Claude 사용법', 'Gemini 비교', 'AI 도구 순위'],
+});
 
 const CATEGORIES = [
   { slug: 'writing-ai', label: '글쓰기 AI', icon: '✍️', desc: 'ChatGPT, Claude, Gemini' },
