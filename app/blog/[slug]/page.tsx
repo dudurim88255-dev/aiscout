@@ -100,13 +100,6 @@ export default async function BlogPostPage({ params }: Props) {
                 )}
               </div>
 
-              {/* 커버 이미지 */}
-              {post.coverImage && (
-                <div className="rounded-xl overflow-hidden mt-6">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={post.coverImage} alt={post.title} className="w-full" />
-                </div>
-              )}
             </header>
 
             <AdBanner slot="2345678901" className="mb-8" />
