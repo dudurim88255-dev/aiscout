@@ -1,4 +1,4 @@
-import type { PostType, ScoredTool } from './rss-collector.ts';
+import type { PostType, ScoredTool } from './rss-collector';
 
 const SYSTEM_PROMPT = `당신은 한국의 AI 도구 전문 블로거입니다.
 실제로 도구를 사용해본 사람의 관점에서 글을 작성합니다.

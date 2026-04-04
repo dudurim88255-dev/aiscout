@@ -6,10 +6,10 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { collectTopItems } from './rss-collector.ts';
-import { generatePost } from './post-generator.ts';
-import { runQualityCheck } from './quality-checker.ts';
-import { insertAffiliateLinks, AFFILIATE_MAP } from '../lib/affiliate.ts';
+import { collectTopItems } from './rss-collector';
+import { generatePost } from './post-generator';
+import { runQualityCheck } from './quality-checker';
+import { insertAffiliateLinks, AFFILIATE_MAP } from '../lib/affiliate';
 
 const POSTS_DIR = path.join(process.cwd(), 'content', 'posts');
 

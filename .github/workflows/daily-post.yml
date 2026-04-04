@@ -26,6 +26,18 @@ jobs:
       - name: 의존성 설치
         run: npm ci
 
+      - name: API 키 확인
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "❌ ANTHROPIC_API_KEY 환경변수가 설정되지 않았습니다."
+            echo "GitHub Settings > Secrets and variables > Actions > New repository secret"
+            echo "Name: ANTHROPIC_API_KEY, Value: 실제 API 키"
+            exit 1
+          fi
+          echo "✅ ANTHROPIC_API_KEY 확인됨 (길이: ${#ANTHROPIC_API_KEY}자)"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
       - name: RSS 수집 + 포스트 자동 생성
         run: npx tsx scripts/collect-and-generate.ts
         env:
