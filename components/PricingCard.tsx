@@ -25,7 +25,7 @@ function formatPrice(price: string | number): string {
   return price;
 }
 
-export default function PricingCard({ tool, plans, lastUpdated }: PricingCardProps) {
+export default function PricingCard({ tool, plans = [], lastUpdated }: PricingCardProps) {
   return (
     <div className="my-8">
       <div className="flex items-center justify-between mb-4">

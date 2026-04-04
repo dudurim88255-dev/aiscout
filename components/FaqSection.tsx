@@ -10,7 +10,7 @@ interface FaqSectionProps {
   items: FaqItem[];
 }
 
-export default function FaqSection({ items }: FaqSectionProps) {
+export default function FaqSection({ items = [] }: FaqSectionProps) {
   const normalized = items.map(item => ({
     question: item.question ?? item.q ?? '',
     answer: item.answer ?? item.a ?? '',

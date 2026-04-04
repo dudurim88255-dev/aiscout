@@ -10,7 +10,7 @@ interface ComparisonTableProps {
   reason?: string;
 }
 
-export default function ComparisonTable({ tools, criteria, recommended, reason }: ComparisonTableProps) {
+export default function ComparisonTable({ tools = [], criteria = [], recommended, reason }: ComparisonTableProps) {
   const recommendedIndex = recommended ? tools.indexOf(recommended) : -1;
 
   return (
