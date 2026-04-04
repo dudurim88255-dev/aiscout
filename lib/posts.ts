@@ -59,8 +59,14 @@ export function getAllPosts(): PostMeta[] {
 
 export function getPostBySlug(slug: string): { meta: PostMeta; content: string } | null {
   if (!fs.existsSync(POSTS_DIR)) return null;
-  const files = fs.readdirSync(POSTS_DIR);
-  const file = files.find(f => f.includes(slug) && f.endsWith('.mdx'));
+  const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.mdx'));
+
+  // frontmatter의 slug 필드로 정확히 매칭 (파일명 기반 검색보다 신뢰성 높음)
+  const file = files.find(f => {
+    const raw = fs.readFileSync(path.join(POSTS_DIR, f), 'utf-8');
+    const { data } = matter(raw);
+    return (data.slug ?? f.replace('.mdx', '')) === slug;
+  });
   if (!file) return null;
 
   const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
