@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
             <AdBanner slot="2345678901" className="mb-8" />
 
             {/* MDX 본문 — 신규 컴포넌트 포함 */}
-            <div className="prose prose-invert max-w-none">
+            <div className="prose">
               <MDXRemote source={content} components={MDX_COMPONENTS} />
             </div>
 
