@@ -53,3 +53,154 @@ main {
   border: 1px solid var(--border);
   backdrop-filter: blur(8px);
 }
+
+/* ===== 본문 가독성 — Prose 커스터마이징 ===== */
+.prose {
+  color: var(--text-primary);
+  line-height: 1.9;
+  font-size: 1.05rem;
+}
+
+/* 단락 간격 */
+.prose p {
+  margin-top: 0;
+  margin-bottom: 1.6em;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+/* 제목들 */
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.prose h2 {
+  font-size: 1.45rem;
+  margin-top: 3rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose h3 {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
+  color: var(--accent-amber);
+}
+
+/* 이미지 */
+.prose img {
+  border-radius: 12px;
+  width: 100%;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+}
+
+/* 인용 블록 */
+.prose blockquote {
+  border-left: 3px solid var(--accent-amber);
+  padding: 0.8rem 1.2rem;
+  margin: 1.8rem 0;
+  background: rgba(245,158,11,0.05);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-secondary);
+  font-style: normal;
+}
+
+/* 리스트 */
+.prose ul, .prose ol {
+  margin-bottom: 1.6em;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.5em;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.prose ul li::marker {
+  color: var(--accent-amber);
+}
+
+.prose ol li::marker {
+  color: var(--accent-amber);
+  font-weight: 600;
+}
+
+/* 구분선 */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* 코드 */
+.prose code {
+  background: rgba(245,158,11,0.1);
+  color: var(--accent-amber-light);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+
+.prose pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.8rem 0;
+}
+
+/* 테이블 */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.8rem 0;
+  font-size: 0.95rem;
+}
+
+.prose th {
+  background: var(--bg-card);
+  color: var(--accent-amber);
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border);
+  font-weight: 600;
+  text-align: left;
+}
+
+.prose td {
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.prose tr:nth-child(even) td {
+  background: rgba(26,26,36,0.5);
+}
+
+/* 굵은 텍스트 */
+.prose strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* 링크 */
+.prose a {
+  color: var(--accent-amber);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 팁/경고 박스 — > [!TIP] 같은 형태로 활용 */
+.prose .callout {
+  background: rgba(245,158,11,0.07);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 1.8rem 0;
+}
