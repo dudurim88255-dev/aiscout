@@ -3,6 +3,15 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
+// Noto Sans KR (한글 지원) 폰트 로드
+async function loadKoreanFont() {
+  const res = await fetch(
+    'https://fonts.gstatic.com/s/notosanskr/v36/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzuoyeLTq8H4hfeE.0.woff2',
+    { cache: 'force-cache' }
+  );
+  return res.arrayBuffer();
+}
+
 // 카테고리별 색상 팔레트
 const CATEGORY_PALETTE: Record<string, { bg: string; accent: string; icon: string }> = {
   'writing-ai':      { bg: '#0f1a2e', accent: '#f59e0b', icon: '✍️' },
@@ -31,6 +40,8 @@ export async function GET(req: NextRequest) {
     HOW_TO_GUIDE:    '활용법',
   };
   const badge = typeLabel[postType] ?? '리뷰';
+
+  const fontData = await loadKoreanFont();
 
   return new ImageResponse(
     (
@@ -120,6 +131,10 @@ export async function GET(req: NextRequest) {
         }} />
       </div>
     ),
-    { width: 1200, height: 630 }
+    {
+      width: 1200,
+      height: 630,
+      fonts: [{ name: 'NotoSansKR', data: fontData, weight: 700, style: 'normal' }],
+    }
   );
 }

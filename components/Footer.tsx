@@ -9,8 +9,15 @@ export default function Footer() {
         <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
           AI 도구, 먼저 찾고 직접 검증했습니다
         </p>
-        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-          © 2026 AI Scout. 본 블로그의 가격 정보는 변경될 수 있습니다. 최신 정보는 공식 사이트를 확인하세요.
+        <div className="flex items-center justify-center gap-4 text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+          <Link href="/about" className="hover:opacity-80">소개</Link>
+          <span>·</span>
+          <Link href="/privacy" className="hover:opacity-80">개인정보처리방침</Link>
+          <span>·</span>
+          <Link href="/contact" className="hover:opacity-80">문의</Link>
+        </div>
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+          © 2026 AI Scout. 가격 정보는 변경될 수 있습니다. 최신 정보는 공식 사이트를 확인하세요.
         </p>
       </div>
     </footer>
