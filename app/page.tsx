@@ -25,6 +25,10 @@ export default function HomePage() {
   const allPosts = getAllPosts();
   const latestPosts = allPosts.slice(0, 6);
   const vsPosts = allPosts.filter(p => p.postType === 'VS_COMPARISON').slice(0, 3);
+  const countByCategory = allPosts.reduce<Record<string, number>>((acc, p) => {
+    acc[p.category] = (acc[p.category] ?? 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -60,8 +64,16 @@ export default function HomePage() {
             <Link key={cat.slug} href={`/category/${cat.slug}`}
               className="glass-card rounded-xl p-4 hover:opacity-90 transition-opacity">
               <div className="text-2xl mb-2">{cat.icon}</div>
-              <div className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
-                {cat.label}
+              <div className="flex items-center justify-between mb-1">
+                <div className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
+                  {cat.label}
+                </div>
+                {(countByCategory[cat.slug] ?? 0) > 0 && (
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                    style={{ background: 'rgba(245,158,11,0.12)', color: 'var(--accent-amber)' }}>
+                    {countByCategory[cat.slug]}개
+                  </span>
+                )}
               </div>
               <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{cat.desc}</div>
             </Link>
