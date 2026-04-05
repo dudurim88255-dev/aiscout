@@ -39,10 +39,17 @@ export default function HomePage() {
           <span style={{ color: 'var(--accent-amber)' }}>먼저 찾고</span>{' '}
           직접 검증했습니다
         </h1>
-        <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-lg max-w-xl mx-auto mb-6" style={{ color: 'var(--text-secondary)' }}>
           ChatGPT, Claude, Midjourney 등 인기 AI 도구를 솔직하게 비교합니다.
           가격, 기능, 한국어 지원까지 — 직접 써보고 정리했습니다.
         </p>
+        <div className="flex items-center justify-center gap-3 text-sm">
+          <span className="px-3 py-1 rounded-full font-semibold"
+            style={{ background: 'rgba(245,158,11,0.12)', color: 'var(--accent-amber)', border: '1px solid rgba(245,158,11,0.25)' }}>
+            리뷰 {allPosts.length}개
+          </span>
+          <span style={{ color: 'var(--text-muted)' }}>매일 자동 업데이트</span>
+        </div>
       </section>
 
       {/* 카테고리 */}
