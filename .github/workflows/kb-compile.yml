@@ -1,12 +1,14 @@
-name: KB Auto Compile
+﻿name: KB Auto Compile
 
 on:
   push:
     paths:
       - 'kb/raw/**'
   schedule:
-    - cron: '0 9 * * *'  # 매일 한국시간 18:00 (UTC 09:00)
-  workflow_dispatch:  # 수동 실행도 가능
+    - cron: '0 9 * * *'  # 留ㅼ씪 ?쒓뎅?쒓컙 18:00 (UTC 09:00)
+  workflow_dispatch:  # ?섎룞 ?ㅽ뻾??媛??
+permissions:
+  contents: write
 
 jobs:
   compile-kb:
@@ -26,7 +28,7 @@ jobs:
       - name: Find new raw files
         id: find-raw
         run: |
-          # raw/ 파일 목록 생성
+          # raw/ ?뚯씪 紐⑸줉 ?앹꽦
           RAW_FILES=$(find kb/raw -name "*.md" -type f | sort)
           echo "raw_files<<EOF" >> $GITHUB_OUTPUT
           echo "$RAW_FILES" >> $GITHUB_OUTPUT
@@ -58,3 +60,4 @@ jobs:
             git commit -m "chore(kb): auto-compile wiki from raw sources"
             git push
           fi
+
