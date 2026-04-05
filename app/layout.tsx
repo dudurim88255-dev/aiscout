@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from 'next/font/google';
 import Script from 'next/script';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import MouseGradient from '@/components/MouseGradient';
 import './globals.css';
 
 const notoSansKR = Noto_Sans_KR({
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <MouseGradient />
         <Header />
         <main>{children}</main>
         <Footer />
