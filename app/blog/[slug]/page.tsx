@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { getAllPosts, getPostBySlug, getRelatedPosts } from '@/lib/posts';
 import { PostCard } from '@/components/PostCard';
-import { buildPostMetadata, buildArticleJsonLd, buildBreadcrumbJsonLd, SITE_URL, SITE_NAME } from '@/lib/seo';
+import { buildPostMetadata, buildArticleJsonLd, buildBreadcrumbJsonLd, buildOgImageUrl, SITE_URL, SITE_NAME } from '@/lib/seo';
 import { TableOfContents } from '@/components/TableOfContents';
 import { AdBanner } from '@/components/AdBanner';
 import { ShareButtons } from '@/components/ShareButtons';
@@ -12,7 +12,6 @@ import ComparisonTable from '@/components/ComparisonTable';
 import PricingCard from '@/components/PricingCard';
 import ToolRating from '@/components/ToolRating';
 import FaqSection from '@/components/FaqSection';
-import Image from 'next/image';
 import Link from 'next/link';
 
 const MDX_COMPONENTS = {
@@ -101,17 +100,14 @@ export default async function BlogPostPage({ params }: Props) {
                 )}
               </div>
 
-              {/* 썸네일 — coverImage 없으면 bg.png 기본 이미지 */}
-              <div className="relative w-full h-56 md:h-72 rounded-xl overflow-hidden mt-6">
-                <Image
-                  src={post.coverImage || '/bg.png'}
+              {/* 썸네일 */}
+              <div className="rounded-xl overflow-hidden mt-6" style={{ height: '280px' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={post.coverImage || buildOgImageUrl(post)}
                   alt={post.title}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 720px"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(10,10,15,0.6) 100%)' }} />
               </div>
 
             </header>

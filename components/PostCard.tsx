@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { PostMeta } from '@/lib/posts';
+import { buildOgImageUrl } from '@/lib/seo';
 
 const POST_TYPE_LABELS: Record<string, string> = {
   NEW_TOOL_REVIEW: '신규 리뷰',
@@ -18,29 +18,32 @@ const POST_TYPE_COLORS: Record<string, string> = {
   HOW_TO_GUIDE: '#64748b',
 };
 
-const DEFAULT_THUMBNAIL = '/bg.png';
-
-// named export와 default export 모두 지원 (기존 import 호환)
 export function PostCard({ post }: { post: PostMeta }) {
   const typeColor = POST_TYPE_COLORS[post.postType] ?? '#64748b';
   const typeLabel = POST_TYPE_LABELS[post.postType] ?? post.postType;
-  const thumbnail = post.coverImage || DEFAULT_THUMBNAIL;
+  const thumbnail = post.coverImage || buildOgImageUrl(post);
 
   return (
     <Link href={`/blog/${post.slug}`}
       className="block glass-card rounded-xl overflow-hidden hover:opacity-90 transition-opacity">
       {/* 썸네일 */}
-      <div className="relative w-full h-40 overflow-hidden">
-        <Image
+      <div className="relative w-full overflow-hidden" style={{ height: '160px' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src={thumbnail}
           alt={post.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 33vw"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 40%, rgba(10,10,15,0.85) 100%)' }} />
-        <span className="absolute bottom-3 left-3 text-xs font-semibold px-2 py-0.5 rounded-full"
-          style={{ background: `${typeColor}22`, color: typeColor, backdropFilter: 'blur(4px)' }}>
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, transparent 40%, rgba(10,10,15,0.85) 100%)',
+        }} />
+        <span style={{
+          position: 'absolute', bottom: 10, left: 12,
+          fontSize: 12, fontWeight: 600, color: typeColor,
+          background: `${typeColor}22`, borderRadius: 20,
+          padding: '3px 10px', backdropFilter: 'blur(4px)',
+        }}>
           {typeLabel}
         </span>
       </div>

@@ -13,7 +13,7 @@ function resolveImageUrl(url: string): string {
 }
 
 export function buildOgImageUrl(post: PostMeta): string {
-  const params = new URLSearchParams({ title: post.title, category: post.category });
+  const params = new URLSearchParams({ title: post.title, category: post.category, postType: post.postType });
   return `${SITE_URL}/og?${params.toString()}`;
 }
 
