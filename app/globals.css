@@ -55,9 +55,9 @@ main {
 
 .prose p {
   margin-top: 0;
-  margin-bottom: 1.75em;
+  margin-bottom: 2.2em;
   color: var(--text-secondary);
-  line-height: 2;
+  line-height: 1.95;
 }
 
 .prose h1 {

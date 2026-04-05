@@ -23,11 +23,31 @@ export interface ScoredTool {
 }
 
 const RSS_SOURCES = [
+  // 글쓰기·언어 AI
   { url: 'https://www.producthunt.com/feed?category=artificial-intelligence', name: 'ProductHunt' },
   { url: 'https://openai.com/blog/rss', name: 'OpenAI' },
   { url: 'https://www.anthropic.com/rss.xml', name: 'Anthropic' },
   { url: 'https://blog.google/technology/ai/rss/', name: 'GoogleAI' },
   { url: 'https://huggingface.co/blog/feed.xml', name: 'HuggingFace' },
+
+  // 이미지 AI
+  { url: 'https://stability.ai/blog/rss.xml', name: 'StabilityAI' },
+  { url: 'https://www.midjourney.com/updates/rss.xml', name: 'Midjourney' },
+
+  // 영상 AI
+  { url: 'https://runwayml.com/blog/rss.xml', name: 'RunwayML' },
+
+  // 코딩 AI
+  { url: 'https://github.blog/category/ai-ml/feed/', name: 'GitHubAI' },
+  { url: 'https://cursor.sh/blog/rss.xml', name: 'Cursor' },
+
+  // 생산성 AI
+  { url: 'https://www.notion.so/blog/rss.xml', name: 'NotionAI' },
+  { url: 'https://blog.perplexity.ai/rss', name: 'Perplexity' },
+
+  // 오픈소스 AI
+  { url: 'https://mistral.ai/news/rss.xml', name: 'MistralAI' },
+  { url: 'https://ai.meta.com/blog/rss/', name: 'MetaAI' },
 ];
 
 const AI_COMPETITORS: Record<string, string[]> = {

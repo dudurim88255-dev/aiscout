@@ -12,6 +12,7 @@ import ComparisonTable from '@/components/ComparisonTable';
 import PricingCard from '@/components/PricingCard';
 import ToolRating from '@/components/ToolRating';
 import FaqSection from '@/components/FaqSection';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const MDX_COMPONENTS = {
@@ -98,6 +99,19 @@ export default async function BlogPostPage({ params }: Props) {
                     <span>최종 수정: {post.lastUpdated}</span>
                   </>
                 )}
+              </div>
+
+              {/* 썸네일 — coverImage 없으면 bg.png 기본 이미지 */}
+              <div className="relative w-full h-56 md:h-72 rounded-xl overflow-hidden mt-6">
+                <Image
+                  src={post.coverImage || '/bg.png'}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 720px"
+                />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(10,10,15,0.6) 100%)' }} />
               </div>
 
             </header>
