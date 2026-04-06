@@ -54,7 +54,7 @@ export default async function CategoryPage({ params }: Props) {
           <p>아직 이 카테고리에 포스트가 없습니다.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
           {posts.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}

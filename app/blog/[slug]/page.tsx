@@ -150,7 +150,7 @@ export default async function BlogPostPage({ params }: Props) {
             <h2 className="text-lg font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
               관련 글
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
               {relatedPosts.map((p) => (
                 <PostCard key={p.slug} post={p} />
               ))}

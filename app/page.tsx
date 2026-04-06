@@ -86,10 +86,10 @@ export default function HomePage() {
       {/* 인기 비교 글 */}
       {vsPosts.length > 0 && (
         <section className="mb-12">
-          <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
             🔥 인기 비교 분석
           </h2>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div>
             {vsPosts.map(post => <PostCard key={post.slug} post={post} />)}
           </div>
         </section>
@@ -97,15 +97,13 @@ export default function HomePage() {
 
       {/* 최신 글 */}
       <section className="mb-12">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>최신 글</h2>
-        </div>
+        <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>최신 글</h2>
         {latestPosts.length === 0 ? (
           <p className="text-center py-12" style={{ color: 'var(--text-secondary)' }}>
             자동화가 실행되면 글이 생성됩니다.
           </p>
         ) : (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div>
             {latestPosts.map(post => <PostCard key={post.slug} post={post} />)}
           </div>
         )}
