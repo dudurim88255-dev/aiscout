@@ -46,7 +46,7 @@ export default async function TagPage({ params }: Props) {
         <p style={{ color: '#8b96b0', fontSize: 14 }}>태그 관련 논문 해설 {posts.length}편</p>
       </div>
 
-      <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
           <PostCard key={post.slug} post={post} />
         ))}

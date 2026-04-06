@@ -89,7 +89,7 @@ export default function HomePage() {
           <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
             🔥 인기 비교 분석
           </h2>
-          <div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {vsPosts.map(post => <PostCard key={post.slug} post={post} />)}
           </div>
         </section>
@@ -103,7 +103,7 @@ export default function HomePage() {
             자동화가 실행되면 글이 생성됩니다.
           </p>
         ) : (
-          <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {latestPosts.map(post => <PostCard key={post.slug} post={post} />)}
           </div>
         )}
