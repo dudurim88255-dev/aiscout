@@ -32,8 +32,34 @@ function slugify(str: string): string {
     .slice(0, 60);
 }
 
+// 최근 N일 이내에 같은 주제(RSS 타이틀 키워드)로 쓴 포스트가 있는지 확인
+function isTopicAlreadyWritten(toolTitle: string, recentDays = 14): boolean {
+  if (!fs.existsSync(POSTS_DIR)) return false;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - recentDays);
+
+  const keywords = toolTitle
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(w => w.length > 3)
+    .slice(0, 3);
+
+  return fs.readdirSync(POSTS_DIR).some(file => {
+    const dateStr = file.slice(0, 10); // YYYY-MM-DD
+    if (new Date(dateStr) < cutoff) return false;
+    const lower = file.toLowerCase();
+    return keywords.every(k => lower.includes(k));
+  });
+}
+
 async function processOneTool(toolData: Awaited<ReturnType<typeof collectTopItems>>[number]): Promise<boolean> {
   console.log(`\n📌 처리 중: ${toolData.title} (${toolData.postType})`);
+
+  // 최근 14일 내 같은 주제 포스트가 있으면 바로 건너뜀
+  if (isTopicAlreadyWritten(toolData.title)) {
+    console.log('  ⏭️ 최근 14일 내 같은 주제 포스트 존재 — 건너뜀');
+    return false;
+  }
 
   let mdxContent = await generatePost(toolData);
   if (!mdxContent.trim()) {
@@ -55,9 +81,15 @@ async function processOneTool(toolData: Awaited<ReturnType<typeof collectTopItem
   const quality = runQualityCheck({ title, content: contentWithLinks, slug, seoKeyword });
 
   if (!quality.passed) {
+    const isDuplicate = quality.reasons.some(r => r.includes('중복'));
+    if (isDuplicate) {
+      console.log(`  ⏭️ 중복 슬러그 감지 — 건너뜀`);
+      return false;
+    }
     console.log(`  ❌ 품질 체크 실패: ${quality.reasons.join(', ')}`);
     console.log('  🔄 재생성 시도...');
     mdxContent = await generatePost(toolData);
+    mdxContent = mdxContent.replace(/^```[a-z]*\n/, '').replace(/\n```\s*$/, '');
   }
 
   const today = new Date().toISOString().slice(0, 10);
