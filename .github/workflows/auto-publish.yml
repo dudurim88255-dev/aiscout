@@ -2,7 +2,7 @@
 
 on:
   schedule:
-    - cron: '0 0,6,12,18 * * *'   # 留?6?쒓컙 (UTC 0쨌6쨌12쨌18??
+    - cron: '0 0,12 * * *'
   workflow_dispatch:                 # ?섎룞 ?ㅽ뻾 踰꾪듉
 
 permissions:
@@ -50,4 +50,5 @@ jobs:
         env:
           VERCEL_ORG_ID: team_ruRodWfalxM5k4QldqQgNq7d
           VERCEL_PROJECT_ID: prj_VRiLzJALZXA2HrAH1wtzLsrW0xKR
+
 
