@@ -105,27 +105,31 @@ async function processOneTool(toolData: Awaited<ReturnType<typeof collectTopItem
   return true;
 }
 
+const TARGET_POSTS = 2; // 하루 목표 포스트 수
+
 async function main() {
   console.log('🤖 aiscout 자동 포스트 생성 시작');
   console.log(`📅 날짜: ${new Date().toISOString()}`);
 
   console.log('\n📡 RSS 수집 중...');
-  const topItems = await collectTopItems(10);
+  // 중복 제외 후에도 TARGET_POSTS 확보를 위해 후보 풀을 넓게 수집
+  const candidates = await collectTopItems(30);
 
-  if (topItems.length === 0) {
+  if (candidates.length === 0) {
     console.log('수집된 아이템 없음 — 종료');
     process.exit(0);
   }
 
-  console.log(`✅ ${topItems.length}개 아이템 수집 완료`);
+  console.log(`✅ ${candidates.length}개 후보 수집 완료`);
 
   let successCount = 0;
-  for (const item of topItems) {
+  for (const item of candidates) {
+    if (successCount >= TARGET_POSTS) break;
     const success = await processOneTool(item);
     if (success) successCount++;
   }
 
-  console.log(`\n🎉 완료: ${successCount}/${topItems.length}개 포스트 생성`);
+  console.log(`\n🎉 완료: ${successCount}/${TARGET_POSTS}개 포스트 생성`);
 }
 
 main().catch(e => {
