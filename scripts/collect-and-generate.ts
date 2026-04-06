@@ -105,7 +105,7 @@ async function processOneTool(toolData: Awaited<ReturnType<typeof collectTopItem
   return true;
 }
 
-const TARGET_POSTS = 2; // 하루 목표 포스트 수
+const TARGET_POSTS = 1; // 1회 실행당 최고 포스트 1개 (하루 2회 실행 = 일 2개)
 
 async function main() {
   console.log('🤖 aiscout 자동 포스트 생성 시작');
