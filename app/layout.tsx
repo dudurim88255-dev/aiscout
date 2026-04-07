@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 import Script from 'next/script';
 import Header from '@/components/Header';
@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     siteName: 'AI Scout',
   },
   themeColor: '#f59e0b',
+  verification: { google: 'de9TSsBBneQps0DJ0It1vzBsUTeGLGOoqqjAvSsx3fI' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -39,6 +40,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-M3P42TWQJL"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-M3P42TWQJL');
+          `}
+        </Script>
       </head>
       <body>
         <MouseGradient />
