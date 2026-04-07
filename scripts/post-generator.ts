@@ -1,5 +1,20 @@
 import type { PostType, ScoredTool } from './rss-collector';
 
+// Jina Reader로 원문 전체 내용 가져오기 (실패 시 null 반환)
+async function fetchJinaContent(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://r.jina.ai/${url}`, {
+      headers: { 'Accept': 'text/plain', 'User-Agent': 'aiscout-bot/1.0' },
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!res.ok) return null;
+    const text = await res.text();
+    return text.slice(0, 8000).trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 const SYSTEM_PROMPT = `당신은 한국의 AI 도구 전문 블로거입니다.
 실제로 도구를 써본 사람의 솔직한 시각으로 씁니다.
 
@@ -108,8 +123,11 @@ FAQ 섹션 → FaqSection:
 - 경쟁 도구 비교 시 실제 발표된 사실만 사용. 추측 비교 금지
 - 미래 예측은 "예상된다" / "알려졌다" 등 불확실성 표현 사용`;
 
-function getPromptByType(tool: ScoredTool): string {
-  const base = `도구명: ${tool.title}\n설명: ${tool.description}\n출처: ${tool.source}\n발행일: ${tool.pubDate}`;
+function getPromptByType(tool: ScoredTool, fullContent: string | null): string {
+  const articleContent = fullContent
+    ? `원문 전체 내용:\n${fullContent}`
+    : `설명: ${tool.description}`;
+  const base = `도구명: ${tool.title}\n${articleContent}\n출처: ${tool.source}\n발행일: ${tool.pubDate}`;
   const today = new Date().toISOString().slice(0, 10);
   // RSS 소스 카테고리를 블로그 카테고리로 매핑
   const categoryMap: Record<string, string> = {
@@ -303,7 +321,16 @@ async function callClaude(prompt: string): Promise<string> {
 }
 
 export async function generatePost(tool: ScoredTool): Promise<string> {
-  const prompt = getPromptByType(tool);
+  // Jina로 원문 전체 내용 가져오기 (실패해도 계속 진행)
+  console.log(`  🔍 Jina로 원문 수집 중: ${tool.link}`);
+  const fullContent = await fetchJinaContent(tool.link);
+  if (fullContent) {
+    console.log(`  ✅ Jina 성공 (${fullContent.length}자)`);
+  } else {
+    console.log('  ⚠️  Jina 실패 — RSS description으로 폴백');
+  }
+
+  const prompt = getPromptByType(tool, fullContent);
   console.log(`  → ${tool.postType} 프롬프트로 생성 중...`);
   return callClaude(prompt);
 }
