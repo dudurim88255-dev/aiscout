@@ -6,6 +6,7 @@ export interface RssItem {
   link: string;
   pubDate: string;
   source: string;
+  category: string;
 }
 
 export interface ScoredTool {
@@ -14,6 +15,7 @@ export interface ScoredTool {
   link: string;
   pubDate: string;
   source: string;
+  category: string;
   daysSinceLaunch: number;
   competitors: string[];
   priceChanged: boolean;
@@ -23,31 +25,28 @@ export interface ScoredTool {
 }
 
 const RSS_SOURCES = [
-  // 글쓰기·언어 AI
-  { url: 'https://www.producthunt.com/feed?category=artificial-intelligence', name: 'ProductHunt' },
-  { url: 'https://openai.com/blog/rss', name: 'OpenAI' },
-  { url: 'https://www.anthropic.com/rss.xml', name: 'Anthropic' },
-  { url: 'https://blog.google/technology/ai/rss/', name: 'GoogleAI' },
-  { url: 'https://huggingface.co/blog/feed.xml', name: 'HuggingFace' },
+  // AI 뉴스 (한국인이 많이 검색하는 핫 토픽)
+  { url: 'https://techcrunch.com/category/artificial-intelligence/feed/', name: 'TechCrunch', category: 'news-ai' },
+  { url: 'https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', name: 'TheVerge', category: 'news-ai' },
+  { url: 'https://feeds.feedburner.com/venturebeat/SZYF', name: 'VentureBeat', category: 'news-ai' },
+  { url: 'https://feeds.arstechnica.com/arstechnica/technology-lab', name: 'ArsTechnica', category: 'news-ai' },
+  { url: 'https://www.technologyreview.com/feed/', name: 'MITTechReview', category: 'news-ai' },
 
-  // 이미지 AI
-  { url: 'https://stability.ai/blog/rss.xml', name: 'StabilityAI' },
-  { url: 'https://www.midjourney.com/updates/rss.xml', name: 'Midjourney' },
+  // AI 기업 공식 블로그
+  { url: 'https://openai.com/blog/rss.xml', name: 'OpenAI', category: 'llm' },
+  { url: 'https://www.anthropic.com/rss.xml', name: 'Anthropic', category: 'llm' },
+  { url: 'https://blog.google/technology/ai/rss/', name: 'GoogleAI', category: 'llm' },
+  { url: 'https://mistral.ai/news/rss.xml', name: 'MistralAI', category: 'llm' },
+  { url: 'https://ai.meta.com/blog/rss/', name: 'MetaAI', category: 'llm' },
 
-  // 영상 AI
-  { url: 'https://runwayml.com/blog/rss.xml', name: 'RunwayML' },
+  // 이미지·영상·코딩 AI
+  { url: 'https://stability.ai/blog/rss.xml', name: 'StabilityAI', category: 'image-ai' },
+  { url: 'https://github.blog/category/ai-ml/feed/', name: 'GitHubAI', category: 'coding-ai' },
+  { url: 'https://blog.perplexity.ai/rss', name: 'Perplexity', category: 'search-ai' },
+  { url: 'https://huggingface.co/blog/feed.xml', name: 'HuggingFace', category: 'open-source-ai' },
 
-  // 코딩 AI
-  { url: 'https://github.blog/category/ai-ml/feed/', name: 'GitHubAI' },
-  { url: 'https://cursor.sh/blog/rss.xml', name: 'Cursor' },
-
-  // 생산성 AI
-  { url: 'https://www.notion.so/blog/rss.xml', name: 'NotionAI' },
-  { url: 'https://blog.perplexity.ai/rss', name: 'Perplexity' },
-
-  // 오픈소스 AI
-  { url: 'https://mistral.ai/news/rss.xml', name: 'MistralAI' },
-  { url: 'https://ai.meta.com/blog/rss/', name: 'MetaAI' },
+  // 제품 출시
+  { url: 'https://www.producthunt.com/feed?category=artificial-intelligence', name: 'ProductHunt', category: 'new-tool' },
 ];
 
 const AI_COMPETITORS: Record<string, string[]> = {
@@ -58,7 +57,7 @@ const AI_COMPETITORS: Record<string, string[]> = {
   'sora': ['runway', 'kling', 'veo'],
 };
 
-async function fetchRss(url: string, sourceName: string): Promise<RssItem[]> {
+async function fetchRss(url: string, sourceName: string, category: string): Promise<RssItem[]> {
   try {
     const res = await fetch(url, {
       headers: { 'User-Agent': 'aiscout-bot/1.0' },
@@ -66,14 +65,14 @@ async function fetchRss(url: string, sourceName: string): Promise<RssItem[]> {
     });
     if (!res.ok) return [];
     const text = await res.text();
-    return parseRssXml(text, sourceName);
+    return parseRssXml(text, sourceName, category);
   } catch {
     console.warn(`RSS 수집 실패: ${sourceName}`);
     return [];
   }
 }
 
-function parseRssXml(xml: string, sourceName: string): RssItem[] {
+function parseRssXml(xml: string, sourceName: string, category: string): RssItem[] {
   const items: RssItem[] = [];
   const itemRegex = /<item[^>]*>([\s\S]*?)<\/item>/gi;
   let match: RegExpExecArray | null;
@@ -86,7 +85,7 @@ function parseRssXml(xml: string, sourceName: string): RssItem[] {
     const pubDate = extractTag(itemXml, 'pubDate');
 
     if (title && link) {
-      items.push({ title, description: description.slice(0, 500), link, pubDate, source: sourceName });
+      items.push({ title, description: description.slice(0, 500), link, pubDate, source: sourceName, category });
     }
   }
   return items;
@@ -131,15 +130,45 @@ function daysSince(dateStr: string): number {
   }
 }
 
+// 한국인이 많이 검색할 만한 키워드 가중치
+const HOT_KEYWORDS = [
+  'gpt-5', 'gpt5', 'chatgpt', 'claude', 'gemini', 'llama', 'sora',
+  'grok', 'deepseek', 'qwen', 'mistral',
+  'free', 'open source', 'open-source',
+  'released', 'launches', 'announces',
+  'vs ', 'compared', 'beats', 'surpasses',
+  'breakthrough', 'new model', 'new version',
+  'price', 'pricing', 'cost',
+  'api', 'multimodal', 'reasoning', 'coding',
+  'image', 'video', 'voice', 'search',
+];
+
 function scoreItem(item: RssItem, competitors: string[]): number {
   let score = 0;
   const days = daysSince(item.pubDate);
-  if (days <= 1) score += 50;
+
+  // 최신성 — 핫한 뉴스일수록 높은 가중치
+  if (days === 0) score += 60;
+  else if (days <= 1) score += 50;
   else if (days <= 3) score += 30;
-  else if (days <= 7) score += 20;
-  if (competitors.length >= 2) score += 30;
-  if (item.source === 'ProductHunt') score += 20;
-  if (item.title.toLowerCase().includes('launch') || item.title.includes('출시')) score += 15;
+  else if (days <= 7) score += 15;
+
+  // 경쟁/비교 내용 → 검색량 많음
+  if (competitors.length >= 2) score += 25;
+  if (competitors.length >= 1) score += 10;
+
+  // 핫 키워드
+  const lower = `${item.title} ${item.description}`.toLowerCase();
+  for (const kw of HOT_KEYWORDS) {
+    if (lower.includes(kw)) score += 8;
+  }
+
+  // 신뢰도 높은 소스 (메이저 AI 기업 공식 발표)
+  if (['OpenAI', 'Anthropic', 'GoogleAI', 'MetaAI', 'MistralAI'].includes(item.source)) score += 20;
+  // 주요 뉴스 매체
+  if (['TechCrunch', 'TheVerge', 'VentureBeat'].includes(item.source)) score += 10;
+
+  if (item.title.toLowerCase().includes('launch') || item.title.includes('출시')) score += 10;
   return score;
 }
 
@@ -147,7 +176,7 @@ export async function collectTopItems(limit = 2): Promise<ScoredTool[]> {
   const allItems: RssItem[] = [];
 
   for (const source of RSS_SOURCES) {
-    const items = await fetchRss(source.url, source.name);
+    const items = await fetchRss(source.url, source.name, source.category);
     allItems.push(...items);
   }
 
@@ -167,6 +196,7 @@ export async function collectTopItems(limit = 2): Promise<ScoredTool[]> {
 
     return {
       ...item,
+      category: item.category,
       daysSinceLaunch: days,
       competitors,
       priceChanged,

@@ -97,11 +97,31 @@ FAQ 섹션 → FaqSection:
 - "혁신적인", "획기적인", "필수 도구", "게임체인저", "강력한"
 - 4문장 이상 단락
 - ## 제목 다음에 바로 ## 제목 (내용 없이)
-- 결론 없는 마무리 ("지켜봐야 할 것 같습니다" 금지)`;
+- 결론 없는 마무리 ("지켜봐야 할 것 같습니다" 금지)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[9] 정확도 규칙 — 가장 중요
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- 원문(RSS)에 없는 수치·기능·가격은 절대 창작 금지
+- 불확실한 정보는 "정확한 수치는 공식 발표 확인 필요" 라고 명시
+- 가격·성능 수치는 출처 URL이나 발표일 함께 표기
+- 경쟁 도구 비교 시 실제 발표된 사실만 사용. 추측 비교 금지
+- 미래 예측은 "예상된다" / "알려졌다" 등 불확실성 표현 사용`;
 
 function getPromptByType(tool: ScoredTool): string {
   const base = `도구명: ${tool.title}\n설명: ${tool.description}\n출처: ${tool.source}\n발행일: ${tool.pubDate}`;
   const today = new Date().toISOString().slice(0, 10);
+  // RSS 소스 카테고리를 블로그 카테고리로 매핑
+  const categoryMap: Record<string, string> = {
+    'news-ai': 'news',
+    'llm': 'llm',
+    'image-ai': 'image-ai',
+    'coding-ai': 'coding-ai',
+    'search-ai': 'search-ai',
+    'open-source-ai': 'open-source',
+    'new-tool': 'tools',
+  };
+  const category = categoryMap[tool.category] ?? 'news';
 
   const prompts: Record<PostType, string> = {
     NEW_TOOL_REVIEW: `${base}
@@ -124,7 +144,7 @@ slug: "[영문-소문자-하이픈]"
 date: "${today}"
 lastUpdated: "${today}"
 postType: "NEW_TOOL_REVIEW"
-category: "writing-ai"
+category: "${category}"
 tags: ["[도구명]", "[주요기능]", "[카테고리]", "[비교키워드]"]
 tools: ["${tool.title}"]
 seoKeyword: "[도구명] [핵심기능] 리뷰 사용법 [연도]"
@@ -155,7 +175,7 @@ slug: "[slug]"
 date: "${today}"
 lastUpdated: "${today}"
 postType: "VS_COMPARISON"
-category: "writing-ai"
+category: "${category}"
 tags: ["[도구A]", "[도구B]", "AI 도구 비교", "[카테고리]"]
 tools: ["${tool.title}", "${tool.competitors[0] ?? ''}"]
 seoKeyword: "${tool.title} vs ${tool.competitors[0] ?? ''} 비교 2026"
@@ -183,7 +203,7 @@ slug: "[slug]"
 date: "${today}"
 lastUpdated: "${today}"
 postType: "PRICING_GUIDE"
-category: "writing-ai"
+category: "${category}"
 tags: ["${tool.title}", "AI 요금제", "가격 비교", "무료 AI"]
 tools: ["${tool.title}"]
 seoKeyword: "${tool.title} 가격 요금제 2026"
@@ -211,7 +231,7 @@ slug: "[slug]"
 date: "${today}"
 lastUpdated: "${today}"
 postType: "UPDATE_SUMMARY"
-category: "writing-ai"
+category: "${category}"
 tags: ["${tool.title}", "AI 업데이트", "신기능", "[카테고리]"]
 tools: ["${tool.title}"]
 seoKeyword: "${tool.title} 업데이트 변경사항 2026"
@@ -241,7 +261,7 @@ slug: "[slug]"
 date: "${today}"
 lastUpdated: "${today}"
 postType: "HOW_TO_GUIDE"
-category: "writing-ai"
+category: "${category}"
 tags: ["${tool.title}", "AI 사용법", "활용법", "[카테고리]"]
 tools: ["${tool.title}"]
 seoKeyword: "${tool.title} 사용법 활용법 2026"

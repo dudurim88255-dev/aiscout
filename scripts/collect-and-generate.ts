@@ -33,7 +33,7 @@ function slugify(str: string): string {
 }
 
 // 최근 N일 이내에 같은 주제(RSS 타이틀 키워드)로 쓴 포스트가 있는지 확인
-function isTopicAlreadyWritten(toolTitle: string, recentDays = 14): boolean {
+function isTopicAlreadyWritten(toolTitle: string, recentDays = 7): boolean {
   if (!fs.existsSync(POSTS_DIR)) return false;
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - recentDays);
