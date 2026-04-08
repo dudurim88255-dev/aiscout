@@ -10,7 +10,8 @@ async function fetchJinaContent(url: string): Promise<string | null> {
     if (!res.ok) return null;
     const text = await res.text();
     return text.slice(0, 8000).trim() || null;
-  } catch {
+  } catch (e) {
+    console.warn(`Jina 콘텐츠 가져오기 실패: ${url}`, e);
     return null;
   }
 }

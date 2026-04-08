@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   },
   // 프로덕션에서 console.log 제거
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
   // Turbopack 루트 명시 (상위 폴더에 다른 package-lock.json 존재 시 필요)
   turbopack: {

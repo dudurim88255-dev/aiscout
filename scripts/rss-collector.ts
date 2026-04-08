@@ -63,7 +63,10 @@ async function fetchRss(url: string, sourceName: string, category: string): Prom
       headers: { 'User-Agent': 'aiscout-bot/1.0' },
       signal: AbortSignal.timeout(10000),
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.warn(`RSS 수집 실패 (${res.status}): ${sourceName}`);
+      return [];
+    }
     const text = await res.text();
     return parseRssXml(text, sourceName, category);
   } catch {
@@ -125,7 +128,8 @@ function daysSince(dateStr: string): number {
     const pub = new Date(dateStr);
     const now = new Date();
     return Math.floor((now.getTime() - pub.getTime()) / (1000 * 60 * 60 * 24));
-  } catch {
+  } catch (e) {
+    console.warn(`날짜 파싱 실패: "${dateStr}"`, e);
     return 30;
   }
 }

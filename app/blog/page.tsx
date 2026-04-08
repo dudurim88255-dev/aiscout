@@ -5,11 +5,13 @@ import { PostCard } from '@/components/PostCard';
 import { SITE_NAME, SITE_URL } from '@/lib/seo';
 import Link from 'next/link';
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
-  title: '전체 논문 해설',
-  description: '인간 수명 150세를 향한 최신 생명과학 논문 해설 모음',
+  title: '전체 AI 도구 리뷰',
+  description: 'ChatGPT, Claude, Gemini 등 AI 도구 리뷰·비교·가이드 모음',
   openGraph: {
-    title: `전체 논문 해설 | ${SITE_NAME}`,
+    title: `전체 AI 도구 리뷰 | ${SITE_NAME}`,
     url: `${SITE_URL}/blog`,
   },
 };

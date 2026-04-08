@@ -22,7 +22,7 @@ export function insertAffiliateLinks(
   let result = content;
   for (const [tool, link] of Object.entries(affiliateMap)) {
     // 이미 마크다운 링크 안에 있는 텍스트는 건드리지 않음
-    const regex = new RegExp(`(?<!\\[)\\b${tool}\\b(?!\\])(?!\\()`, '');
+    const regex = new RegExp(`(?<!\\[)\\b${tool}\\b(?!\\])(?!\\()`, 'g');
     result = result.replace(regex, `[${tool}](${link})`);
   }
   return result;

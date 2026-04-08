@@ -1,5 +1,5 @@
 {
-  "name": "science-blog",
+  "name": "aiscout",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "generate": "npx tsx scripts/collect-and-generate.ts"
   },
   "dependencies": {
-    "@next/font": "^14.2.15",
+    "@vercel/analytics": "^1.6.1",
     "@vercel/og": "^0.11.1",
     "gray-matter": "^4.0.3",
     "next": "16.2.1",

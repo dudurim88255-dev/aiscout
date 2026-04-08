@@ -59,9 +59,36 @@ export function getAllPosts(): PostMeta[] {
 
 export function getPostBySlug(slug: string): { meta: PostMeta; content: string } | null {
   if (!fs.existsSync(POSTS_DIR)) return null;
-  const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.mdx'));
 
-  // frontmatter의 slug 필드로 정확히 매칭 (파일명 기반 검색보다 신뢰성 높음)
+  // 파일명 = slug.mdx 규칙이므로 O(1) 직접 접근 먼저 시도
+  const directPath = path.join(POSTS_DIR, `${slug}.mdx`);
+  if (fs.existsSync(directPath)) {
+    const raw = fs.readFileSync(directPath, 'utf-8');
+    const { data, content } = matter(raw);
+    if ((data.slug ?? slug) === slug) {
+      return {
+        meta: {
+          slug: data.slug ?? slug,
+          title: data.title ?? '',
+          date: data.date ?? '',
+          lastUpdated: data.lastUpdated ?? data.date ?? '',
+          category: data.category ?? '',
+          tags: data.tags ?? [],
+          summary: data.summary ?? '',
+          postType: (data.postType ?? 'HOW_TO_GUIDE') as PostType,
+          tools: data.tools ?? [],
+          seoKeyword: data.seoKeyword ?? '',
+          faqEnabled: data.faqEnabled ?? false,
+          rating: data.rating,
+          coverImage: data.coverImage,
+        },
+        content,
+      };
+    }
+  }
+
+  // fallback: frontmatter slug로 전체 스캔 (파일명이 slug와 다른 경우)
+  const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.mdx'));
   const file = files.find(f => {
     const raw = fs.readFileSync(path.join(POSTS_DIR, f), 'utf-8');
     const { data } = matter(raw);

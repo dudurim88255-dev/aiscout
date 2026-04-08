@@ -12,6 +12,7 @@ import ComparisonTable from '@/components/ComparisonTable';
 import PricingCard from '@/components/PricingCard';
 import ToolRating from '@/components/ToolRating';
 import FaqSection from '@/components/FaqSection';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const MDX_COMPONENTS = {
@@ -24,6 +25,8 @@ const MDX_COMPONENTS = {
 interface Props {
   params: Promise<{ slug: string }>;
 }
+
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -55,6 +58,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       <ReadingProgress />
+      {/* JSON-LD는 head에 삽입 (Next.js App Router에서 <> 최상위 script는 head로 호이스팅됨) */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
@@ -101,12 +105,14 @@ export default async function BlogPostPage({ params }: Props) {
               </div>
 
               {/* 썸네일 */}
-              <div className="rounded-xl overflow-hidden mt-6" style={{ height: '280px' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <div className="rounded-xl overflow-hidden mt-6" style={{ position: 'relative', height: '280px' }}>
+                <Image
                   src={post.coverImage || buildOgImageUrl(post)}
                   alt={post.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  style={{ objectFit: 'cover' }}
+                  priority
                 />
               </div>
 

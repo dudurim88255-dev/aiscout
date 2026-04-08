@@ -32,11 +32,18 @@ export default function SearchBar() {
     if (query.length < 2) { setResults([]); setOpen(false); return; }
     setLoading(true);
     timer.current = setTimeout(async () => {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      const data = await res.json();
-      setResults(data);
-      setOpen(true);
-      setLoading(false);
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        if (!res.ok) { setResults([]); setOpen(false); setLoading(false); return; }
+        const data = await res.json();
+        setResults(data);
+        setOpen(true);
+      } catch {
+        setResults([]);
+        setOpen(false);
+      } finally {
+        setLoading(false);
+      }
     }, 300);
   }, [query]);
 

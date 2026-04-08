@@ -40,6 +40,13 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: RSS 수집 + 포스트 자동 생성
+        id: generate
+        run: npx tsx scripts/collect-and-generate.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: 생성 실패 시 재시도
+        if: failure() && steps.generate.outcome == 'failure'
         run: npx tsx scripts/collect-and-generate.ts
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -55,5 +62,7 @@ jobs:
         run: |
           git config user.name "aiscout-bot"
           git config user.email "bot@users.noreply.github.com"
+          # 다른 워크플로우 실행이 먼저 푸시한 경우를 대비해 pull 후 push
+          git pull --rebase origin main
           git commit -m "auto: $(date +%Y-%m-%d) AI 도구 포스트 자동 생성"
           git push
