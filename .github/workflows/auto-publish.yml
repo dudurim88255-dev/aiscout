@@ -1,9 +1,9 @@
-﻿name: ?쇰Ц ?먮룞 ?섏쭛 & 諛쒗뻾
+name: Daily AI Post Generator
 
 on:
   schedule:
     - cron: '0 0,12 * * *'
-  workflow_dispatch:                 # ?섎룞 ?ㅽ뻾 踰꾪듉
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -25,30 +25,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: ?쇰Ц ?먮룞 ?섏쭛 & ?ъ뒪???앹꽦
+      - name: Generate post
         run: npx tsx scripts/auto-collect.ts
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
-      - name: 蹂寃쎌궗???뺤씤
+      - name: Check changes
         id: changes
         run: |
           git add content/
           git diff --staged --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
 
-      - name: 而ㅻ컠 & ?몄떆
+      - name: Commit & push
         if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -m "feat: ?먮룞 ?쇰Ц ?ъ뒪??$(date +'%Y-%m-%d %H:%M UTC')"
+          git commit -m "feat: auto post $(date +'%Y-%m-%d %H:%M UTC')"
           git push
 
-      - name: Vercel 諛고룷
+      - name: Deploy to Vercel
         if: steps.changes.outputs.changed == 'true'
         run: npx vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
         env:
           VERCEL_ORG_ID: team_ruRodWfalxM5k4QldqQgNq7d
           VERCEL_PROJECT_ID: prj_VRiLzJALZXA2HrAH1wtzLsrW0xKR
-
-
