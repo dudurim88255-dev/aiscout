@@ -177,12 +177,10 @@ function scoreItem(item: RssItem, competitors: string[]): number {
 }
 
 export async function collectTopItems(limit = 2): Promise<ScoredTool[]> {
-  const allItems: RssItem[] = [];
-
-  for (const source of RSS_SOURCES) {
-    const items = await fetchRss(source.url, source.name, source.category);
-    allItems.push(...items);
-  }
+  const results = await Promise.allSettled(
+    RSS_SOURCES.map(source => fetchRss(source.url, source.name, source.category))
+  );
+  const allItems: RssItem[] = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
 
   const seen = new Set<string>();
   const unique = allItems.filter(item => {

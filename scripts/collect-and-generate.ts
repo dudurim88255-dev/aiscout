@@ -55,30 +55,33 @@ function isTopicAlreadyWritten(toolTitle: string, recentDays = 7): boolean {
 async function processOneTool(toolData: Awaited<ReturnType<typeof collectTopItems>>[number]): Promise<boolean> {
   console.log(`\n📌 처리 중: ${toolData.title} (${toolData.postType})`);
 
-  // 최근 14일 내 같은 주제 포스트가 있으면 바로 건너뜀
+  // 최근 7일 내 같은 주제 포스트가 있으면 바로 건너뜀
   if (isTopicAlreadyWritten(toolData.title)) {
-    console.log('  ⏭️ 최근 14일 내 같은 주제 포스트 존재 — 건너뜀');
+    console.log('  ⏭️ 최근 7일 내 같은 주제 포스트 존재 — 건너뜀');
     return false;
   }
 
-  let mdxContent = await generatePost(toolData);
-  if (!mdxContent.trim()) {
+  function parseMdx(raw: string): { mdxContent: string; title: string; slug: string; seoKeyword: string; contentWithLinks: string } {
+    const cleaned = raw.replace(/^```[a-z]*\n/, '').replace(/\n```\s*$/, '');
+    const { frontmatter, content } = extractFrontmatterAndContent(cleaned);
+    const contentWithLinks = insertAffiliateLinks(content, AFFILIATE_MAP);
+    return {
+      mdxContent: `---\n${frontmatter}\n---\n${contentWithLinks}`,
+      title: extractField(frontmatter, 'title'),
+      slug: extractField(frontmatter, 'slug') || slugify(toolData.title),
+      seoKeyword: extractField(frontmatter, 'seoKeyword'),
+      contentWithLinks,
+    };
+  }
+
+  let raw = await generatePost(toolData);
+  if (!raw.trim()) {
     console.warn('  ⚠️ 빈 응답 — 건너뜀');
     return false;
   }
 
-  // 코드 블록 래핑 제거 (```mdx ... ``` 또는 ``` ... ```)
-  mdxContent = mdxContent.replace(/^```[a-z]*\n/, '').replace(/\n```\s*$/, '');
-
-  const { frontmatter, content } = extractFrontmatterAndContent(mdxContent);
-  const contentWithLinks = insertAffiliateLinks(content, AFFILIATE_MAP);
-  mdxContent = `---\n${frontmatter}\n---\n${contentWithLinks}`;
-
-  const title = extractField(frontmatter, 'title');
-  const slug = extractField(frontmatter, 'slug') || slugify(toolData.title);
-  const seoKeyword = extractField(frontmatter, 'seoKeyword');
-
-  const quality = runQualityCheck({ title, content: contentWithLinks, slug, seoKeyword });
+  let parsed = parseMdx(raw);
+  const quality = runQualityCheck({ title: parsed.title, content: parsed.contentWithLinks, slug: parsed.slug, seoKeyword: parsed.seoKeyword });
 
   if (!quality.passed) {
     const isDuplicate = quality.reasons.some(r => r.includes('중복'));
@@ -88,19 +91,19 @@ async function processOneTool(toolData: Awaited<ReturnType<typeof collectTopItem
     }
     console.log(`  ❌ 품질 체크 실패: ${quality.reasons.join(', ')}`);
     console.log('  🔄 재생성 시도...');
-    mdxContent = await generatePost(toolData);
-    mdxContent = mdxContent.replace(/^```[a-z]*\n/, '').replace(/\n```\s*$/, '');
+    raw = await generatePost(toolData);
+    parsed = parseMdx(raw);
   }
 
   const today = new Date().toISOString().slice(0, 10);
-  const filename = `${today}-${slug}.mdx`;
+  const filename = `${today}-${parsed.slug}.mdx`;
   const outPath = path.join(POSTS_DIR, filename);
 
   if (!fs.existsSync(POSTS_DIR)) {
     fs.mkdirSync(POSTS_DIR, { recursive: true });
   }
 
-  fs.writeFileSync(outPath, mdxContent, 'utf-8');
+  fs.writeFileSync(outPath, parsed.mdxContent, 'utf-8');
   console.log(`  ✅ 저장 완료: content/posts/${filename}`);
   return true;
 }
