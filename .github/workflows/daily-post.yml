@@ -62,7 +62,6 @@ jobs:
         run: |
           git config user.name "aiscout-bot"
           git config user.email "bot@users.noreply.github.com"
-          # 다른 워크플로우 실행이 먼저 푸시한 경우를 대비해 pull 후 push
-          git pull --rebase origin main
           git commit -m "auto: $(date +%Y-%m-%d) AI 도구 포스트 자동 생성"
-          git push
+          git pull --rebase origin master
+          git push origin master
