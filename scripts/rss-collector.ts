@@ -50,11 +50,39 @@ const RSS_SOURCES = [
 ];
 
 const AI_COMPETITORS: Record<string, string[]> = {
-  'chatgpt': ['claude', 'gemini', 'gpt'],
-  'claude': ['chatgpt', 'gemini', 'gpt-4'],
-  'midjourney': ['dall-e', 'stable diffusion', 'ideogram'],
-  'cursor': ['copilot', 'codeium', 'replit'],
-  'sora': ['runway', 'kling', 'veo'],
+  // LLM 챗봇
+  'chatgpt': ['claude', 'gemini', 'grok', 'copilot', 'mistral'],
+  'claude': ['chatgpt', 'gemini', 'gpt-4', 'gpt-5', 'grok'],
+  'gemini': ['chatgpt', 'claude', 'gpt-4', 'gpt-5', 'copilot'],
+  'grok': ['chatgpt', 'claude', 'gemini'],
+  'mistral': ['chatgpt', 'claude', 'gemini', 'llama'],
+  'llama': ['mistral', 'gemma', 'qwen', 'deepseek'],
+  'deepseek': ['chatgpt', 'claude', 'llama', 'qwen'],
+  'qwen': ['llama', 'deepseek', 'mistral'],
+  // 코딩 AI
+  'cursor': ['copilot', 'codeium', 'replit', 'windsurf', 'devin'],
+  'copilot': ['cursor', 'codeium', 'tabnine', 'replit'],
+  'codeium': ['copilot', 'cursor', 'tabnine'],
+  'windsurf': ['cursor', 'copilot', 'replit'],
+  'devin': ['cursor', 'copilot', 'replit'],
+  // 이미지 생성
+  'midjourney': ['dall-e', 'stable diffusion', 'ideogram', 'flux', 'firefly'],
+  'dall-e': ['midjourney', 'stable diffusion', 'ideogram', 'flux'],
+  'stable diffusion': ['midjourney', 'dall-e', 'flux', 'ideogram'],
+  'flux': ['midjourney', 'dall-e', 'stable diffusion', 'ideogram'],
+  'ideogram': ['midjourney', 'dall-e', 'flux'],
+  'firefly': ['midjourney', 'dall-e', 'ideogram'],
+  // 영상 생성
+  'sora': ['runway', 'kling', 'veo', 'hailuo', 'pika'],
+  'runway': ['sora', 'kling', 'veo', 'pika'],
+  'kling': ['sora', 'runway', 'hailuo', 'pika'],
+  'veo': ['sora', 'runway', 'kling'],
+  'pika': ['runway', 'sora', 'kling'],
+  // 검색 AI
+  'perplexity': ['chatgpt', 'gemini', 'copilot', 'you.com'],
+  // 음성/기타
+  'elevenlabs': ['suno', 'udio', 'murf'],
+  'suno': ['udio', 'elevenlabs'],
 };
 
 async function fetchRss(url: string, sourceName: string, category: string): Promise<RssItem[]> {
