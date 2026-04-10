@@ -27,8 +27,8 @@ describe('decidePostType', () => {
 });
 
 describe('checkLength', () => {
-  it('3000자 이상은 통과', () => expect(checkLength('가'.repeat(3000))).toBe(true));
-  it('2999자는 실패', () => expect(checkLength('가'.repeat(2999))).toBe(false));
+  it('4500자 이상은 통과', () => expect(checkLength('가'.repeat(4500))).toBe(true));
+  it('4499자는 실패', () => expect(checkLength('가'.repeat(4499))).toBe(false));
 });
 
 describe('checkSeoKeyword', () => {
