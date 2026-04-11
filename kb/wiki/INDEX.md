@@ -1,33 +1,23 @@
-﻿# AI Scout Knowledge Base
+# AI Scout Knowledge Base
 
-> 이 위키는 LLM이 자동으로 컴파일하고 유지합니다. 직접 편집하지 마세요.
+> 이 위키는 LLM이 자동으로 컴파일하고 유지합니다.
+> 마지막 컴파일: 2026-04-11
 
-## 구조
+## 통계
 
-| 디렉토리 | 용도 |
-|----------|------|
-| aw/ | 원본 자료 (기사, 논문, 이미지) |
-| wiki/ | LLM이 컴파일한 위키 |
-| wiki/concepts/ | AI 개념별 문서 (RAG, Fine-tuning, MCP 등) |
-| wiki/tools/ | AI 도구별 리뷰/분석 (Claude, GPT, Cursor 등) |
-| wiki/comparisons/ | 도구 비교, 벤치마크 |
-| wiki/trends/ | 주간/월간 트렌드 분석 |
-| output/ | Q&A 결과물, 리포트, 슬라이드 |
+| 항목 | 수치 |
+|------|------|
+| 원본 자료 (raw/) | 1개 |
+| 위키 문서 (wiki/) | 0개 |
+| 총 단어 수 | 0자 |
 
-## 최근 업데이트
+## 원본 자료
 
-_아직 문서가 없습니다. raw/에 자료를 추가하고 compile 명령을 실행하세요._
+### articles
+- [Claude Code vs Cursor vs Copilot 비교 (2026년 4월)](../raw/articles/claude-vs-cursor-vs-copilot.md) (233자)
 
-## 문서 목록
+## 위키 문서
 
-### Concepts
-_비어 있음_
+## 컴파일 필요
 
-### Tools
-_비어 있음_
-
-### Comparisons
-_비어 있음_
-
-### Trends
-_비어 있음_
+_Claude Code에게 "새 raw 자료를 위키에 컴파일해줘"라고 요청하세요._
