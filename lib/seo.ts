@@ -65,9 +65,9 @@ export function buildArticleJsonLd(post: PostMeta) {
     description: post.summary || post.title,
     image: ogImage,
     author: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
+      '@type': 'Person',
+      name: '흥권',
+      url: `${SITE_URL}/about`,
     },
     publisher: {
       '@type': 'Organization',
@@ -85,6 +85,46 @@ export function buildArticleJsonLd(post: PostMeta) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     keywords: [post.seoKeyword, ...post.tags].filter(Boolean).join(', '),
     inLanguage: 'ko-KR',
+  };
+}
+
+export function buildWebSiteJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    inLanguage: 'ko-KR',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/search?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/favicon.ico` },
+      sameAs: [
+        'https://github.com/dudurim88255-dev',
+      ],
+    },
+  };
+}
+
+export function buildPersonJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: '흥권',
+    url: `${SITE_URL}/about`,
+    sameAs: [
+      'https://github.com/dudurim88255-dev',
+      'https://science-blog-dun.vercel.app',
+      'https://ainews-kr.vercel.app',
+    ],
+    knowsAbout: ['AI 도구', '인공지능', 'ChatGPT', 'Claude', 'Gemini', '이미지 AI', '코딩 AI'],
   };
 }
 

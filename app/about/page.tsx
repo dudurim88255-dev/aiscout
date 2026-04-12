@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { SITE_URL } from '@/lib/seo';
+import { SITE_URL, buildPersonJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'AI Scout 소개 | AI 도구 비교·리뷰 블로그',
@@ -8,7 +8,13 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const personJsonLd = buildPersonJsonLd();
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+    />
     <div className="max-w-2xl mx-auto px-4 py-16">
       <h1 className="text-3xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
         AI Scout 소개
@@ -59,5 +65,6 @@ export default function AboutPage() {
         </p>
       </div>
     </div>
+    </>
   );
 }

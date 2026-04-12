@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getAllPosts } from '@/lib/posts';
 import PostCard from '@/components/PostCard';
 import AdBanner from '@/components/AdBanner';
-import { buildPageMetadata } from '@/lib/seo';
+import { buildPageMetadata, buildWebSiteJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'AI Scout — AI 도구 비교·리뷰·사용법 총정리',
@@ -30,7 +30,14 @@ export default function HomePage() {
     return acc;
   }, {});
 
+  const websiteJsonLd = buildWebSiteJsonLd();
+
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+    />
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* 히어로 */}
       <section className="text-center py-12 mb-10">
@@ -111,5 +118,6 @@ export default function HomePage() {
 
       <AdBanner slot="0987654321" />
     </div>
+    </>
   );
 }

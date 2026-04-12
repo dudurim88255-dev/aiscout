@@ -1,0 +1,32 @@
+# AI Scout
+
+> AI 도구를 직접 써보고 비교 분석하는 한국어 블로그. ChatGPT, Claude, Gemini 등 인기 AI 도구의 가격·기능·한국어 지원을 솔직하게 정리합니다.
+
+## 핵심 콘텐츠
+
+- [Falcon Perception 리뷰 2026](https://aiscout-henna.vercel.app/blog/2026-04-03-falcon-perception-review-2026): 팔콘 퍼셉션 AI 도구 상세 리뷰 및 사용법
+- [Gemini API Flex Priority 추론 티어 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-03-gemini-api-flex-priority-inference-tiers-review-2026): 구글 제미나이 API 추론 등급 비교 분석
+- [Gemma 4 프론티어 멀티모달 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-03-gemma-4-frontier-multimodal-on-device-review): 구글 Gemma 4 온디바이스 멀티모달 AI 리뷰
+- [Google AI 2026년 3월 종합 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-03-google-ai-march-2026-recap-review): 구글 AI 2026년 3월 주요 업데이트 정리
+- [Google 브라질 산림 위성 이미지 AI](https://aiscout-henna.vercel.app/blog/2026-04-03-google-brazil-forest-satellite-imagery-map-review-2026): 구글 AI 위성 이미지 분석 도구 리뷰
+- [Google Vids AI 영상 생성 도구 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-03-google-vids-ai-video-review-2026): 구글 Vids AI 영상 자동 생성 도구 사용기
+- [Granite 4.0 3B Vision 리뷰 2026](https://aiscout-henna.vercel.app/blog/2026-04-03-granite-4-0-3b-vision-review-2026): IBM Granite 4.0 비전 AI 모델 리뷰
+- [Holo3 컴퓨터 사용 AI 프론티어 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-03-holo3-breaking-the-computer-use-frontier-review-2026): Holo3 컴퓨터 사용 AI 최신 기술 분석
+- [TRL v1 포스트 트레이닝 라이브러리 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-03-trl-v1-post-training-library-review-2026): TRL v1 LLM 파인튜닝 도구 상세 리뷰
+- [Veo 3.1 Lite AI 영상 생성 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-03-veo-3-1-lite-review-2026): 구글 Veo 3.1 Lite 영상 생성 AI 리뷰
+- [AI 에이전트 Claude CoWork 리뷰](https://aiscout-henna.vercel.app/blog/2026-04-10-ai-agents-claude-cowork-openclaw-antigravity-review-2026): Claude 기반 AI 에이전트 협업 도구 비교
+
+## 카테고리
+
+- [글쓰기 AI](https://aiscout-henna.vercel.app/category/writing-ai): ChatGPT, Claude, Gemini 등 텍스트 생성 AI
+- [이미지 AI](https://aiscout-henna.vercel.app/category/image-ai): Midjourney, DALL-E, Stable Diffusion 등
+- [영상 AI](https://aiscout-henna.vercel.app/category/video-ai): Sora, Runway, Kling, Veo 등
+- [코딩 AI](https://aiscout-henna.vercel.app/category/code-ai): Cursor, Copilot, Replit 등
+- [생산성 AI](https://aiscout-henna.vercel.app/category/productivity-ai): Notion AI, Perplexity 등
+- [오픈소스 AI](https://aiscout-henna.vercel.app/category/open-source-ai): Llama, Mistral, Gemma 등
+
+## About
+
+운영자: 흥권 (GitHub: dudurim88255-dev)
+AI Scout는 광고성 홍보 없이 AI 도구를 직접 테스트하고 솔직하게 비교하는 블로그입니다.
+매일 최신 AI 뉴스를 수집해 리뷰를 자동 업데이트합니다.
