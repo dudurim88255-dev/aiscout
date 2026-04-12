@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "generate": "npx tsx scripts/collect-and-generate.ts"
+    "generate": "npx tsx scripts/collect-and-generate.ts",
+    "curate": "npx tsx scripts/curate.ts"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
