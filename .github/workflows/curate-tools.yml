@@ -47,6 +47,6 @@ jobs:
             echo "No new posts to commit."
           else
             git commit -m "feat(tools): add AI tool curation post [$(date -u +%Y-%m-%d)]"
-            git pull --rebase origin main
-            git push origin main
+            git pull --rebase origin master
+            git push origin master
           fi
