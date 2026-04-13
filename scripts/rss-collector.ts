@@ -34,15 +34,15 @@ const RSS_SOURCES = [
 
   // AI 기업 공식 블로그
   { url: 'https://openai.com/blog/rss.xml', name: 'OpenAI', category: 'llm' },
-  { url: 'https://www.anthropic.com/news/rss.xml', name: 'Anthropic', category: 'llm' },
+  { url: 'https://techcrunch.com/tag/anthropic/feed/', name: 'Anthropic', category: 'llm' },
   { url: 'https://blog.google/technology/ai/rss/', name: 'GoogleAI', category: 'llm' },
-  { url: 'https://mistral.ai/fr/news/rss/', name: 'MistralAI', category: 'llm' },
+  { url: 'https://techcrunch.com/tag/mistral/feed/', name: 'MistralAI', category: 'llm' },
   { url: 'https://engineering.fb.com/category/ai-research/feed/', name: 'MetaAI', category: 'llm' },
 
   // 이미지·영상·코딩 AI
   { url: 'https://stability.ai/news/rss.xml', name: 'StabilityAI', category: 'image-ai' },
   { url: 'https://github.blog/feed/', name: 'GitHubAI', category: 'coding-ai' },
-  { url: 'https://www.perplexity.ai/hub/blog/rss.xml', name: 'Perplexity', category: 'search-ai' },
+  { url: 'https://techcrunch.com/tag/perplexity-ai/feed/', name: 'Perplexity', category: 'search-ai' },
   { url: 'https://huggingface.co/blog/feed.xml', name: 'HuggingFace', category: 'open-source-ai' },
 
   // 제품 출시
