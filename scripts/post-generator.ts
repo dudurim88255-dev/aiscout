@@ -151,6 +151,8 @@ FAQ 섹션 → FaqSection (반드시 7개 이상 질문 — FAQ가 많을수록 
 - ## 제목 바로 다음에 ## 제목 (내용 없이 연속)
 - 얇은 섹션: H2 아래 3문장 미만의 내용
 - 광고성 표현, 과장된 효능 주장 (애드센스 정책 위반)
+- H2/H3 헤딩에 \`{#...}\` 형식의 앵커 ID 추가 금지 (예: \`## 제목 {#id}\` ❌)
+  MDX는 헤딩 텍스트에서 자동으로 ID를 생성함. 목차의 \`[섹션명](#앵커)\` 링크는 유지 가능.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [11] 정확도 규칙 — 가장 중요
@@ -376,6 +378,10 @@ async function callClaude(prompt: string): Promise<string> {
   return data.content?.[0]?.text ?? '';
 }
 
+function stripHeadingAnchors(content: string): string {
+  return content.replace(/^(#{1,6} .+?)\s*\{#[^}]+\}/gm, '$1');
+}
+
 export async function generatePost(tool: ScoredTool): Promise<string> {
   // Jina로 원문 전체 내용 가져오기 (실패해도 계속 진행)
   console.log(`  🔍 Jina로 원문 수집 중: ${tool.link}`);
@@ -388,5 +394,6 @@ export async function generatePost(tool: ScoredTool): Promise<string> {
 
   const prompt = getPromptByType(tool, fullContent);
   console.log(`  → ${tool.postType} 프롬프트로 생성 중...`);
-  return callClaude(prompt);
+  const raw = await callClaude(prompt);
+  return stripHeadingAnchors(raw);
 }
