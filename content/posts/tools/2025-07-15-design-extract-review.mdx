@@ -1,0 +1,69 @@
+---
+title: "designlang – 웹사이트 디자인 시스템을 통째로 추출하는 CLI 도구"
+description: "designlang(design-extract)은 임의의 웹사이트에서 색상, 타이포그래피, 간격, 그림자, 레이아웃 패턴까지 전체 디자인 언어를 역공학 방식으로 추출하는 npx CLI 도구다."
+date: 2025-07-15
+slug: 2025-07-15-design-extract-review
+tags: ["design-system", "design-tokens", "CLI", "tailwind", "web-scraping", "claude-code-plugin", "디자인 추출", "AI 도구"]
+category: "tools"
+repo_url: "https://github.com/Manavarya09/design-extract"
+stars: 252
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"design-extract","url":"https://github.com/Manavarya09/design-extract","description":"Extract the complete design language from any website — colors, typography, spacing, shadows, and more. npx CLI + Claude Code plugin.","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+## 한 줄 요약
+
+designlang은 임의의 웹사이트에서 색상·타이포그래피·간격·그림자·레이아웃 패턴을 포함한 전체 디자인 언어를 한 번의 명령으로 추출하는 npx CLI 도구다.
+
+## 무엇을 해결하나
+
+프론트엔드 개발 중 레퍼런스 사이트의 디자인 토큰을 수작업으로 뽑아본 경험이 있다면, 그 고통을 알 것이다. 브라우저 DevTools를 열어 색상값 하나하나 복사하고, 폰트 사이즈를 일일이 기록하고, 간격 체계를 추측으로 정리한다. designlang은 이 과정을 완전히 자동화한다. Playwright 기반 헤드리스 브라우저로 대상 사이트를 크롤링하고, 라이브 DOM에서 모든 computed style을 추출한 뒤, 8종류의 출력 파일로 변환한다. 단순한 색상 추출기가 아니라, 그리드·플렉스박스 레이아웃 패턴, 4개 브레이크포인트 반응형 동작, hover·focus·active 인터랙션 상태, WCAG 접근성 점수까지 분석하는 종합 디자인 시스템 역공학 도구다.
+
+## 핵심 기능 3가지
+
+### 1. 8개 포맷 동시 출력
+
+W3C Design Tokens JSON, Tailwind config, CSS 커스텀 프로퍼티, Figma Variables, React/CSS-in-JS 테마, shadcn/ui 테마, AI 최적화 마크다운, 비주얼 HTML 프리뷰를 한 번에 생성한다. 특히 AI 최적화 마크다운은 19개 섹션(색상 팔레트, 타이포그래피, 스페이싱, 보더 래디어스, 박스 섀도, 트랜지션, 컴포넌트 패턴 등)으로 구성되어 LLM에 직접 피딩해서 디자인을 재현할 수 있다.
+
+### 2. 레이아웃·반응형·인터랙션 분석
+
+대부분의 디자인 추출 도구가 색상과 폰트 수준에서 멈추는 반면, designlang은 그리드/플렉스 레이아웃 패턴, 반응형 브레이크포인트별 변화, 인터랙션 상태까지 캡처한다. WCAG 2.1 접근성 스코어링도 포함되어 있어 디자인 감사 용도로도 활용 가능하다.
+
+### 3. Claude Code 플러그인 및 에이전트 스킬 지원
+
+CLI 단독 사용 외에도 `npx skills add` 명령으로 Claude Code, Cursor, Codex 등 40개 이상 AI 에이전트의 스킬로 등록할 수 있다. AI 코딩 어시스턴트가 직접 디자인 토큰을 참조하며 코드를 생성하는 워크플로우를 구성할 수 있다.
+
+## 설치 및 사용
+
+```bash
+# 설치 없이 바로 실행
+npx designlang https://stripe.com
+
+# 전체 분석 모드
+npx designlang https://stripe.com --full
+
+# 글로벌 설치
+npm install -g designlang
+
+# AI 에이전트 스킬로 등록
+npx skills add Manavarya09/design-extract
+```
+
+실행하면 현재 디렉터리에 `stripe-design-language.md`, `stripe-preview.html`, `stripe-tailwind.config.js` 등 8개 파일이 생성된다.
+
+## 누구에게 유용한가
+
+- 레퍼런스 사이트 디자인을 빠르게 분석해야 하는 **프론트엔드 개발자**
+- 기존 서비스의 디자인 토큰을 체계화하려는 **디자인 시스템 담당자**
+- 클라이언트 사이트를 역공학해서 리디자인 제안서를 만드는 **에이전시 개발자**
+- AI 코딩 도구에 디자인 컨텍스트를 주입하고 싶은 **AI-assisted 개발 워크플로우 실험자**
+
+## 한계
+
+Playwright 의존성으로 첫 실행 시 브라우저 바이너리 다운로드가 필요하고, SPA 사이트의 경우 렌더링 완료 타이밍에 따라 추출 결과가 불완전할 수 있다. JavaScript로 동적 생성되는 스타일(CSS-in-JS 런타임 등)은 초기 로드 상태 기준으로만 캡처되므로, 사용자 인터랙션 후에만 나타나는 스타일은 누락될 가능성이 있다. 아직 Star 252개 수준의 초기 프로젝트라 엣지 케이스 대응이나 문서화가 부족한 편이며, 대규모 사이트에서의 성능 검증도 더 필요하다.
+
+---
+
+원문: https://github.com/Manavarya09/design-extract
