@@ -1,0 +1,63 @@
+---
+title: "BuilderPulse: 인디해커를 위한 AI 데일리 인텔리전스"
+description: "Hacker News, GitHub, Product Hunt 등 10개 이상 소스에서 300+ 시그널을 분석해 매일 아침 빌더가 만들어야 할 것을 알려주는 AI 기반 일일 브리핑 도구"
+date: 2026-04-17
+slug: "2026-04-17-builderpulse-review"
+tags: ["AI", "indie-hacker", "builder-tools", "daily-intelligence", "사이드프로젝트", "트렌드분석", "product-hunt", "hacker-news"]
+category: "tools"
+repo_url: "https://github.com/BuilderPulse/BuilderPulse"
+stars: 876
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"BuilderPulse","url":"https://github.com/BuilderPulse/BuilderPulse","description":"AI-powered daily intelligence for indie hackers and builders. 20 questions, 10+ sources, every morning.","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+# BuilderPulse — 매일 아침 "오늘 뭘 만들어야 하는가"를 알려주는 AI 브리핑
+
+BuilderPulse는 Hacker News, GitHub Trending, Product Hunt, HuggingFace, Google Trends, Reddit 등 10개 이상의 소스에서 300개 넘는 시그널을 수집·분석해, 인디해커와 빌더에게 매일 아침 실행 가능한 제품 아이디어를 제공하는 AI 기반 일일 인텔리전스 도구다.
+
+## 무엇을 해결하나
+
+빌더가 가장 많이 겪는 문제는 "뭘 만들어야 하는지 모르겠다"가 아니다. 정보가 너무 많아서 의미 있는 기회를 놓치는 것이다. Hacker News 프론트페이지를 훑고, Reddit을 뒤지고, Product Hunt 런칭을 확인하고, GitHub Trending을 살피는 데 하루 1~2시간을 쓰고도 결국 아무것도 안 만드는 루프에 빠진다.
+
+BuilderPulse는 이 산발적인 정보 수집을 하나의 구조화된 데일리 리포트로 압축한다. 단순 뉴스 큐레이션이 아니라, "이 시그널 조합이라면 지금 이걸 만들면 된다"는 실행 레벨의 제안까지 포함한다. 4월 17일자 리포트를 보면, €54,000 Firebase 청구서 사건에서 "크로스 클라우드 AI 빌링 트립와이어 데몬"이라는 구체적 제품 아이디어를 2시간 빌드 규모로 제시한다. 이 정도 구체성이 핵심이다.
+
+## 핵심 기능 3가지
+
+**1. 멀티소스 시그널 교차 분석**
+단일 플랫폼 트렌드가 아닌, 여러 소스에서 동시에 감지되는 시그널을 교차 검증한다. "claude managed agents"가 Google Trends에서 3,750% 급등했는데 비교 아티클이 없다 — 이런 식의 공급-수요 갭을 짚어낸다.
+
+**2. 실행 가능한 2시간 빌드 제안**
+매일 하나의 "2시간이면 만들 수 있는 것" 제안이 들어간다. 아이디어 수준이 아니라, 왜 지금이어야 하고 누가 돈을 낼 것인지까지 맥락을 붙인다.
+
+**3. 영어·중국어 이중 리포트 + RSS**
+영어와 중국어 리포트를 동시에 발행하며, GitHub 커밋 기반 RSS 피드를 지원한다. 별도 앱 설치 없이 기존 RSS 리더에 붙이면 된다.
+
+## 사용 방법
+
+별도 설치가 필요 없다. GitHub 레포를 Watch하거나 RSS를 구독하면 끝이다.
+
+```bash
+# RSS 피드 구독 (커밋 기반)
+https://github.com/BuilderPulse/BuilderPulse/commits/main.atom
+
+# 오늘자 영문 리포트 직접 접근
+https://github.com/BuilderPulse/BuilderPulse/blob/main/en/2026/2026-04-17.md
+
+# 오늘자 중문 리포트
+https://github.com/BuilderPulse/BuilderPulse/blob/main/zh/2026/2026-04-17.md
+```
+
+GitHub에서 Star와 Watch를 눌러두면 매일 아침 리포트가 올라올 때 알림을 받을 수 있다. Slack이나 Discord 웹훅에 RSS를 연결하면 팀 채널로 자동 전달도 가능하다.
+
+## 누구에게 유용한가
+
+- **사이드프로젝트 아이디어를 찾는 인디해커**: 매일 검증된 시그널 기반 아이디어를 받아볼 수 있다.
+- **마이크로 SaaS 빌더**: "Backblaze가 백업을 조용히 망가뜨렸고 611명이 월 $5짜리 솔루션을 기다린다" 같은 즉시 실행 가능한 기회를 포착한다.
+- **콘텐츠 크리에이터**: 트렌드 시그널을 기반으로 SEO 선점 콘텐츠를 빠르게 제작할 수 있다.
+- **VC·스카우터**: 초기 단계 시장 움직임을 일별로 추적하는 보조 도구로 쓸 수 있다.
+
+## 한계
+
+코드 레포가 아니다. 자동화 파이프라인이나 분석 로직이 공개되어 있지 않아, 시그널 수집·분석 방법론을 검증할 수 없다. 리포트가 어떤 AI 모델을 쓰는지, 어떤 기준으로 시그널을 선별하는지 블랙박스 상태다. 한국어 리포트가 없고 영어·중국어만 지원한다는 점도 국내 빌더에게는 진입 장벽이다. 스타 876개로 커뮤니티
