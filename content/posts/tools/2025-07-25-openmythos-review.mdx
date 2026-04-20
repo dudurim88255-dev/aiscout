@@ -1,0 +1,81 @@
+---
+title: "OpenMythos: Claude Mythos 아키텍처를 오픈소스로 재구성한 이론적 구현체"
+description: "Anthropic Claude Mythos의 Recurrent-Depth Transformer 아키텍처를 공개 연구 기반으로 재구성한 PyTorch 오픈소스 프로젝트 리뷰"
+date: 2025-07-25
+slug: 2025-07-25-openmythos-review
+tags: [Claude, Anthropic, transformer, MoE, recurrent-depth, PyTorch, "오픈소스", "AI 아키텍처", looped-transformer]
+category: "tools"
+repo_url: https://github.com/kyegomez/OpenMythos
+stars: 4028
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpenMythos","url":"https://github.com/kyegomez/OpenMythos","description":"A theoretical reconstruction of the Claude Mythos architecture, built from first principles using the available research literature.","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+OpenMythos는 Anthropic의 Claude Mythos 아키텍처를 공개된 연구 문헌만으로 이론적으로 재구성한 오픈소스 PyTorch 구현체다.
+
+## 무엇을 해결하나
+
+Claude의 내부 아키텍처는 비공개다. 연구자와 개발자가 Claude 수준의 추론 깊이를 실험하려면 직접 아키텍처를 구현해야 하는데, Recurrent-Depth Transformer(RDT), Sparse MoE, MLA/GQA 어텐션 전환 같은 최신 기법을 한데 엮는 작업은 상당한 엔지니어링 부담이다. OpenMythos는 이 조합을 하나의 설정 객체로 통합해, 연구자가 compute-adaptive하고 depth-variable한 추론 구조를 즉시 실험할 수 있게 한다. 공식 구현이 아닌 이론적 재구성이라는 점은 명확히 인지해야 한다.
+
+## 핵심 기능 3가지
+
+**1. Recurrent-Depth Transformer (RDT) 3단계 구조**
+Prelude(트랜스포머 블록) → Recurrent Block(최대 `max_loop_iters`까지 반복) → Coda의 3단계로 구성된다. 반복 블록이 동일 파라미터로 여러 번 순환하면서 고정 파라미터 대비 추론 깊이를 동적으로 늘린다. 복잡한 추론이 필요한 입력에 더 많은 연산을 할당하는 compute-adaptive 패턴의 핵심이다.
+
+**2. MLA / GQA 어텐션 전환**
+설정값 하나(`attn_type`)로 Multi-Latent Attention(MLA)과 Grouped-Query Attention(GQA) 사이를 전환한다. MLA는 KV 캐시 압축에 유리하고, GQA는 구현 단순성과 추론 속도에 강점이 있다. 두 방식을 동일 코드베이스에서 비교 실험할 수 있다는 점이 실용적이다.
+
+**3. Sparse MoE with Shared Experts**
+라우팅 전문가(routed experts)와 공유 전문가(shared experts)를 함께 운용하는 Sparse Mixture-of-Experts 피드포워드 구조를 탑재했다. `n_experts`, `n_shared_experts`, `n_experts_per_tok` 등 세밀한 설정이 가능해 MoE 스케일링 법칙 실험에 적합하다.
+
+## 설치 및 사용 예시
+
+```bash
+pip install open-mythos
+```
+
+```python
+import torch
+from open_mythos.main import OpenMythos, MythosConfig
+
+cfg = MythosConfig(
+    vocab_size=1000,
+    dim=256,
+    n_heads=8,
+    max_seq_len=128,
+    max_loop_iters=4,
+    prelude_layers=1,
+    coda_layers=1,
+    n_experts=8,
+    n_shared_experts=1,
+    n_experts_per_tok=2,
+    expert_dim=64,
+    lora_rank=8,
+    attn_type="mla",
+    n_kv_heads=8,
+    kv_lora_rank=32,
+    q_lora_rank=64,
+    qk_rope_head_dim=16,
+    qk_nope_head_dim=16,
+)
+
+model = OpenMythos(cfg)
+x = torch.randint(0, 1000, (1, 128))
+out = model(x)
+```
+
+`MythosConfig` 하나로 모든 아키텍처 변수를 제어한다. `attn_type`을 `"gqa"`로 바꾸면 GQA 모드로 전환된다.
+
+## 누구에게 유용한가
+
+- Recurrent-Depth Transformer나 Looped Transformer 계열 아키텍처를 논문 수준에서 실험하려는 **AI 연구자**
+- MoE 라우팅 전략, MLA vs GQA 비교 등 아키텍처 어블레이션을 빠르게 돌려야 하는 **ML 엔지니어**
+- Claude급 모델의 구조적 직관을 코드로 이해하고 싶은 **학습 목적의 개발자**
+
+## 한계
+
+가장 큰 한계는 이름 그대로 "이론적 재구성"이라는 점이다. Anthropic의 실제 Mythos 아키텍처와 동일하다는 보장이 전혀 없다. 사전 훈련된 가중치도 제공되지 않으며, 대규모 학습 검증 결과도 부재하다. 스타 수(4,028)에 비해 실제 학습 재현 보고는 찾기 어렵다. Topics에 GPT-5, GPT-7 같은 태그가 포함된 점은 SEO 목적의 과장으로 보이며, 프로젝트의 신뢰도를 스스로 깎는 요소다. 연구 참고용으로는 가치가 있지만, 프로덕션 적용은 권장하지 않는다.
+
+원문: https://github.com/kyegomez/OpenMythos
