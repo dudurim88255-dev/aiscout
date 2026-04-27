@@ -1,0 +1,62 @@
+---
+title: "Garden Skills – AI 코딩 에이전트를 위한 프로덕션급 스킬 컬렉션"
+description: "Claude Code, Cursor, Codex 등 AI 코딩 에이전트에 웹 디자인, 이미지 생성, RAG 검색 스킬을 추가하는 오픈소스 컬렉션 리뷰"
+date: 2025-07-16
+slug: 2025-07-16-garden-skills-review
+tags: [agent-skills, claude-code, cursor, web-design, gpt-image-2, rag, AI 에이전트, 프롬프트 엔지니어링, 오픈소스]
+category: "tools"
+repo_url: "https://github.com/ConardLi/garden-skills"
+stars: 1542
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"garden-skills","url":"https://github.com/ConardLi/garden-skills","description":"ConardLi's open-source Skills collection, featuring web design, knowledge retrieval, image generation, and more.","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+# Garden Skills – AI 코딩 에이전트에 실전 스킬을 붙이는 가장 빠른 방법
+
+Garden Skills는 Claude Code, Cursor, Codex 등 AI 코딩 에이전트에 웹 디자인·이미지 생성·지식 검색 능력을 추가하는 프로덕션급 스킬 컬렉션이다. JavaScript 기반이며, SKILL.md 스펙을 따르는 구조화된 스킬 파일을 프로젝트에 드롭인하는 방식으로 동작한다.
+
+## 무엇을 해결하나
+
+AI 코딩 에이전트는 범용 코드 생성에는 강하지만, 특정 도메인 작업(디자인 시스템 적용, 이미지 프롬프트 최적화, 대용량 문서 검색)에서는 일관성이 떨어진다. 매번 프롬프트를 수동으로 작성하거나, 에이전트가 파일 전체를 컨텍스트에 올려 토큰을 낭비하는 문제가 반복된다. Garden Skills는 이런 반복적 도메인 지식을 표준화된 스킬 단위로 캡슐화해서 에이전트가 곧바로 활용할 수 있게 만든다.
+
+## 핵심 기능 3가지
+
+**1. web-design-engineer – 웹 디자인 자동화**
+AI가 생성하는 웹 페이지의 품질을 극적으로 끌어올린다. 보라-분홍 그라데이션, Inter 폰트, 이모지 아이콘 같은 클리셰를 차단하는 블록리스트를 내장하고, oklch 색상 이론 기반의 6가지 컬러-폰트 페어링을 제공한다. 요구사항 분석 → 컨텍스트 수집 → 디자인 시스템 → 프로토타입 → 빌드 → 검증의 6단계 워크플로를 약 520줄의 패턴 라이브러리로 구현했다.
+
+**2. gpt-image-2 – 이미지 생성 프롬프트 스킬**
+GPT Image 2 및 OpenAI 호환 이미지 API를 위한 전용 스킬이다. Garden 로컬 실행, 호스트 네이티브 위임, 어드바이저 전용의 세 가지 런타임 모드를 지원하며, 18개 카테고리에 70개 이상의 구조화된 프롬프트 템플릿을 포함한다. 생성된 프롬프트와 이미지를 자동으로 아카이빙하고, 모드 감지 스크립트로 사일런트 실패를 방지한다.
+
+**3. rag-skill (kb-retriever) – 로컬 지식 베이스 검색**
+전체 파일을 컨텍스트에 로드하지 않고 계층적 `data_structure.md` 인덱스를 탐색해 필요한 정보만 추출하는 RAG 스킬이다. "학습 후 처리(learn-before-process)" 패턴을 강제하여 토큰 효율성을 극대화한다.
+
+## 설치 및 사용
+
+Claude Code 플러그인 마켓플레이스에서 바로 설치하거나, 프로젝트에 수동 복사할 수 있다.
+
+```bash
+# Option A: Claude Code 마켓플레이스 (가장 간편)
+# Claude Code 내에서 skill 검색 후 설치
+
+# Option B: 프로젝트에 직접 복사
+git clone https://github.com/ConardLi/garden-skills.git
+cp -r garden-skills/skills/web-design-engineer ./your-project/.skills/
+
+# Option C: Git submodule로 관리
+git submodule add https://github.com/ConardLi/garden-skills.git .garden-skills
+```
+
+스킬은 각 디렉토리의 `SKILL.md` 파일로 정의되며, AI 에이전트가 이 파일을 읽어 동작 방식을 자동으로 파악한다.
+
+## 누구에게 유용한가
+
+- Claude Code, Cursor, Codex 등 AI 코딩 에이전트를 일상적으로 사용하는 개발자
+- AI로 랜딩 페이지나 프로토타입을 자주 생성하는데 디자인 품질에 불만이 있는 프론트엔드 개발자
+- 대규모 문서를 AI에 먹이면서 토큰 비용에 민감한 팀
+- 자체 에이전트 스킬을 만들려는 개발자에게 SKILL.md 스펙의 레퍼런스 구현으로 활용 가능
+
+## 한계
+
+현재 스킬이 3개에 불과해 커버리지가 제한적이다. web-design-engineer의 안티클리셰 규칙이 의도적으로 특정 스타일을 강하게 배제하기 때문에, 실제로 보라-분홍 그라데이션이 필요한 브랜드에서는 커스터마이징이 필수다. gpt-image-2 스킬은 OpenAI API 키가 있어야 실질적으로 작동하며, rag-skill은 `data_structure.md`를 직접 작성해야 하는 초기 셋업 비용이 존재한다
