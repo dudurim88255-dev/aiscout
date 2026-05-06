@@ -1,0 +1,72 @@
+---
+title: "Yao Open Prompts: 중국어 AI 프롬프트 라이브러리 리뷰"
+description: "중국어 기반 AI 프롬프트 55개를 업무, 학습, 콘텐츠, 마케팅, 생활 시나리오별로 분류한 오픈소스 프롬프트 라이브러리 yao-open-prompts를 분석한다."
+date: 2025-07-15
+slug: 2025-07-15-yao-open-prompts-review
+tags: ["prompt-engineering", "중국어 프롬프트", "AI", "GEO", "chinese-prompts", "오픈소스", "프롬프트 라이브러리"]
+category: "tools"
+repo_url: "https://github.com/yaojingang/yao-open-prompts"
+stars: 276
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"yao-open-prompts","url":"https://github.com/yaojingang/yao-open-prompts","description":"Yao Open Prompts：中文 AI 提示词库，覆盖工作、学习、内容、营销和生活场景","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+# Yao Open Prompts — 실무 시나리오별 중국어 AI 프롬프트 라이브러리
+
+**yao-open-prompts는 업무·학습·콘텐츠·마케팅·생활 등 실제 사용 시나리오 55개를 체계적으로 분류한 중국어 AI 프롬프트 오픈소스 라이브러리다.** CC BY 4.0 라이선스로 공개되어 있으며, 각 프롬프트는 복사해서 바로 쓸 수 있는 형태로 정리되어 있다.
+
+## 무엇을 해결하나
+
+프롬프트 엔지니어링을 하다 보면 두 가지 문제에 부딪힌다. 첫째, 검증된 프롬프트를 찾기 어렵다. 블로그나 커뮤니티에 흩어진 프롬프트는 품질 편차가 크고, 교육 홍보성 콘텐츠와 뒤섞여 있다. 둘째, 중국어 맥락에 맞는 프롬프트가 부족하다. 영어 프롬프트를 번역해서 쓰면 뉘앙스가 달라지거나, 중국 시장 특유의 시나리오(WeChat 공중호 HTML, GEO 콘텐츠 등)를 커버하지 못한다. yao-open-prompts는 이 두 문제를 정면으로 다룬다. 원본 합집 문서에서 교육 홍보·스크린샷·영상 첨부 설명을 제거하고, 순수한 프롬프트 본문만 남겼다. 시리즈형 콘텐츠는 주제별 합집으로 병합해 디렉토리가 파편화되지 않도록 설계했다.
+
+## 핵심 기능 3가지
+
+**1. 9개 카테고리 × 55개 프롬프트의 시나리오 매핑.** AI방법(8), AI업무(10), AI학습(11), AI생활(2), AI교육(4), AI콘텐츠(13), AI프로그래밍(1), AI마케팅(3), AI사고(3)로 나뉜다. 메타 프롬프트 생성 시스템 V0.6, Schema.org GEO 구조화 데이터, 계약서 생성, 페이만 질문 학습법 등 실전 밀착형 프롬프트가 포함되어 있다.
+
+**2. frontmatter 기반 통일 규격.** 모든 프롬프트 파일은 title, category, subcategory, version, status 등의 YAML frontmatter를 갖는다. 이 덕분에 스크립트로 카탈로그를 자동 생성하고 품질 검사를 돌릴 수 있다.
+
+**3. 자동화 유지보수 파이프라인.** 카탈로그 재생성, 레포 품질 체크, 웹페이지 빌드를 Python 스크립트로 처리한다. 날짜 기반 버전 관리(v2026.05.1 형태)와 릴리스 체크리스트까지 갖춘 구조다.
+
+## 사용 방법
+
+레포를 클론한 뒤 카탈로그에서 원하는 프롬프트를 찾아 복사하면 된다.
+
+```bash
+git clone https://github.com/yaojingang/yao-open-prompts.git
+cd yao-open-prompts
+```
+
+카탈로그 전체 목록 확인:
+
+```bash
+cat CATALOG.md
+```
+
+특정 프롬프트 파일 열기 후 `{{변량}}`이나 `[플레이스홀더]`를 실제 작업 정보로 교체:
+
+```bash
+cat prompts/01-ai-methods/rtf-meta-prompt-system-v06.md
+```
+
+레포 품질 검사 및 카탈로그 자동 재생성:
+
+```bash
+python3 scripts/check_repo.py
+python3 scripts/generate_catalog.py
+python3 scripts/generate_webpage.py
+```
+
+새 프롬프트를 추가할 때는 템플릿을 복사해서 해당 카테고리 디렉토리에 넣는다:
+
+```bash
+cp templates/prompt-file-template.md prompts/02-ai-work/my-new-prompt.md
+```
+
+## 누구에게 유용한가
+
+- **중국어 LLM 프롬프트를 설계하는 개발자.** 중국어 특유의 표현과 시나리오를 참고할 수 있다.
+- **GEO(Generative Engine Optimization) 실무자.** Schema.org 구조화 데이터 생성 프롬프트와 GEO 콘텐츠 개작 프롬프트가 별도로 분류되어 있다.
+- **프롬프트 엔지니어링 방법론을 체계화하려는 팀.** RTF 프레임워크 기반 메타 프롬프트 시스템, frontmatter 규격, 버전 관리 체계를 그대로 팀 내부 프롬프트 관리에 차용할 수 있다.
+- **중국 시장 대상 마케팅·콘텐츠 팀.** WeChat 공중호 HTML, PPT, 영상 스
