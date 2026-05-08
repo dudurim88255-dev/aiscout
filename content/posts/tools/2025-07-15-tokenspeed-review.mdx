@@ -1,0 +1,71 @@
+---
+title: "TokenSpeed: 빛의 속도를 목표로 한 LLM 추론 엔진 리뷰"
+description: "TokenSpeed는 TensorRT-LLM급 성능과 vLLM급 사용성을 결합한 에이전틱 워크로드 특화 LLM 추론 엔진이다. Blackwell GPU 최적화, MLA 커널, C++ 스케줄러 등 핵심 기능을 분석한다."
+date: 2025-07-15
+slug: "2025-07-15-tokenspeed-review"
+tags: ["LLM", "inference engine", "Blackwell", "DeepSeek", "vLLM", "TensorRT-LLM", "MLA", "에이전틱", "추론 최적화", "lightseek"]
+category: "tools"
+repo_url: "https://github.com/lightseekorg/tokenspeed"
+stars: 775
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"tokenspeed","url":"https://github.com/lightseekorg/tokenspeed","description":"TokenSpeed is a speed-of-light LLM inference engine.","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+## 한 줄 요약
+
+TokenSpeed는 에이전틱(agentic) 워크로드에 특화된 초고속 LLM 추론 엔진으로, TensorRT-LLM 수준의 성능과 vLLM 수준의 사용성을 동시에 달성하려는 도구다.
+
+## 무엇을 해결하나
+
+프로덕션 환경에서 에이전틱 LLM 워크로드를 서빙할 때 가장 큰 병목은 추론 속도와 자원 효율이다. TensorRT-LLM은 빠르지만 사용이 까다롭고, vLLM은 쓰기 편하지만 최극단 성능을 끌어내기 어렵다. TokenSpeed는 이 두 축 사이의 간극을 정면으로 공략한다. 특히 NVIDIA Blackwell(B200) GPU에서 Kimi K2.5 같은 대형 모델을 서빙할 때, 기존 TensorRT-LLM 대비 동등하거나 우위의 Pareto 곡선을 보여준다. 에이전트 호출이 빈번한 워크로드—도구 호출, 멀티턴 대화, 연쇄 추론—에서 지연 시간과 처리량의 균형점을 극대화하는 것이 핵심 목표다.
+
+## 핵심 기능 3가지
+
+### 1. Local-SPMD 모델링 레이어와 정적 컴파일러
+
+사용자가 병렬화 로직을 직접 작성할 필요가 없다. 모듈 경계에 배치 어노테이션만 지정하면, 정적 컴파일러가 집합 통신(collective communication) 코드를 자동 생성한다. 텐서 병렬·파이프라인 병렬 설정이 선언적으로 처리되므로, 멀티 GPU 배포 시 코드 복잡도가 크게 줄어든다.
+
+### 2. 유한 상태 머신 기반 C++ 스케줄러
+
+요청 생명주기, KV 캐시 소유권, 오버랩 타이밍을 유한 상태 머신(FSM)으로 인코딩한다. 타입 시스템이 컴파일 타임에 KV 자원 재사용의 안전성을 보장하므로, 런타임 버그를 구조적으로 차단한다. C++ 제어 플레인과 Python 실행 플레인의 분리 설계 덕분에 CPU 오버헤드도 최소화된다.
+
+### 3. Blackwell 최적화 MLA 커널
+
+Multi-head Latent Attention(MLA) 구현을 플러그인 방식으로 제공하며, Blackwell GPU에서 가장 빠른 MLA 커널 중 하나를 탑재하고 있다. 중앙 레지스트리를 통해 커널을 교체·확장할 수 있어, 새로운 아키텍처 지원이 용이하다.
+
+## 설치 및 사용 예시
+
+현재 프리뷰 릴리스 단계이므로 소스 빌드가 기본이다.
+
+```bash
+git clone https://github.com/lightseekorg/tokenspeed.git
+cd tokenspeed
+pip install -e .
+```
+
+서버 실행은 다음과 같다.
+
+```bash
+python -m tokenspeed.serve \
+  --model kimi-k2.5 \
+  --tp 8 \
+  --gpu b200
+```
+
+상세 파라미터는 공식 문서의 [Server Parameters](https://lightseek.org/tokenspeed/configuration/server) 페이지에서 확인할 수 있다.
+
+## 누구에게 유용한가
+
+- **에이전틱 서비스 운영자**: 도구 호출·멀티턴 추론이 잦은 LLM 서비스에서 지연을 극한까지 줄여야 하는 팀.
+- **Blackwell GPU 조기 도입 팀**: B200 하드웨어의 성능을 최대로 끌어내야 하는 인프라 엔지니어.
+- **추론 엔진 연구자**: FSM 스케줄러, 정적 컴파일러 등 새로운 런타임 설계를 학습하려는 개발자.
+
+## 한계
+
+프리뷰 릴리스이므로 **프로덕션 배포는 권장하지 않는다**. 현재 Kimi K2.5/B200 조합만 벤치마크가 검증되었고, Qwen 3.6·DeepSeek V4·MiniMax M2.7 지원은 아직 병합 전이다. Hopper·MI350 최적화, PD 분리, KV 스토어, VLM 지원 등 핵심 런타임 기능도 수 주 내 순차 병합 예정으로 공지되어 있다. 커뮤니티 생태계와 문서도 초기 단계라, 트러블슈팅 시 소스 코드를 직접 읽어야 할 가능성이 높다.
+
+---
+
+원문: https://github.com/lightseekorg/tokenspeed
