@@ -1,0 +1,214 @@
+---
+title: "Claude Code·Claude in Chrome 보안 취약점 완전 분석: 당신의 보안 스택이 놓치는 4가지 맹점 (2026)"
+slug: "claude-code-chrome-security-blind-spots-audit-2026"
+date: "2026-05-13"
+lastUpdated: "2026-05-13"
+postType: "NEW_TOOL_REVIEW"
+category: "news"
+tags: ["Claude Code", "Claude 보안 취약점", "AI 보안 감사", "프롬프트 인젝션", "AI 도구 리뷰"]
+tools: ["Claude Code", "Claude in Chrome"]
+seoKeyword: "Claude Code 보안 취약점 리뷰 사용법 한국어 2026"
+summary: "Claude Code와 Claude in Chrome의 보안 취약점 4가지를 직접 분석했다. SCADA 공격부터 OAuth 토큰 탈취까지, 기존 보안 스택이 탐지하지 못하는 맹점과 대응 감사 매트릭스를 정리했다."
+coverImage: ""
+faqEnabled: true
+rating: 3.0
+---
+
+[Claude](https://claude.ai) Code나 [Claude](https://claude.ai) in Chrome을 업무에 쓰고 있다면, 지금 당장 확인해야 할 보안 취약점이 있다. 2026년 5월 6일~7일 단 48시간 안에 네 개의 보안 연구팀이 동일한 구조적 결함을 각각 다른 공격 표면에서 발견했다.
+
+이 글의 결론부터 말하면, 이건 단순 버그가 아니다. [Claude](https://claude.ai)가 가진 '플랫 권한 구조'라는 설계 문제가 근본 원인이며, 패치 하나로 해결되지 않는다. 각 공격 경로별 맹점과 조직이 지금 당장 실행할 수 있는 감사 체크리스트를 구체적으로 정리했다.
+
+
+## 이 글의 목차
+
+1. [핵심 요약](#핵심-요약)
+2. [이번 보안 사태란 무엇인가 — 배경과 구조적 원인](#이번-보안-사태란-무엇인가)
+3. [맹점 1: SCADA·OT 환경 — Dragos가 발견한 수도 시설 공격](#맹점-1-scadaot-환경)
+4. [맹점 2: Chrome 확장 프로그램 — ClaudeBleed와 패치 우회](#맹점-2-chrome-확장-프로그램)
+5. [맹점 3: OAuth 토큰 탈취 — Mitiga의 MCP 설정 파일 공격](#맹점-3-oauth-토큰-탈취)
+6. [맹점 4: 플랫 권한 구조 — 에이전트가 이미 모든 권한을 갖는다](#맹점-4-플랫-권한-구조)
+7. [직접 검토한 솔직한 후기 — 장점과 아쉬운 점](#직접-검토한-솔직한-후기)
+8. [요금제](#요금제)
+9. [이런 분께 추천합니다 / 이런 분께는 비추천](#이런-분께-추천합니다--이런-분께는-비추천)
+10. [솔직한 평점](#솔직한-평점)
+11. [자주 묻는 질문](#자주-묻는-질문)
+12. [결론 — 지금 당장 해야 할 것](#결론)
+
+
+## 핵심 요약
+
+- **관련 도구:** [Claude](https://claude.ai) Code (CLI 기반 AI 코딩 에이전트), [Claude](https://claude.ai) in Chrome (브라우저 확장 프로그램)
+- **발견된 취약점 수:** 4개의 공격 표면 (OT/SCADA, 브라우저 확장, OAuth 토큰, 권한 평면)
+- **보고 기관:** Dragos, LayerX, Mitiga Labs (2026년 5월 6~7일 공개)
+- **핵심 문제:** 혼동된 대리인(Confused Deputy) — LLM의 플랫 권한 구조
+- **패치 상태:** 부분 패치 배포 (완전 해결 미확인)
+- **가격:** [Claude](https://claude.ai) Pro $20/월(₩28,000/월), [Claude](https://claude.ai) for Teams $25/월(₩35,000/월)
+- **한국어 지원:** 인터페이스 일부 한국어, 코드 생성·응답 한국어 지원
+- **영향 대상:** [Claude](https://claude.ai) Code 사용 개발자, Chrome 확장 사용자, MCP 통합 조직
+- **추천 긴급도:** 현재 [Claude](https://claude.ai) Code·[Claude](https://claude.ai) in Chrome 사용 중인 기업은 즉시 감사 필요
+
+
+## 이번 보안 사태란 무엇인가
+
+2026년 5월 6일부터 7일 사이, Dragos, LayerX, Mitiga Labs를 포함한 네 개의 보안 연구팀이 각각 독립적으로 Anthropic의 [Claude](https://claude.ai)에 관한 연구 결과를 발표했다.
+
+대부분의 언론은 이를 세 개의 별개 버그로 보도했다. 하지만 공통된 뿌리가 있다. 바로 **'혼동된 대리인(Confused Deputy)'** 문제다.
+
+### 혼동된 대리인이란 무엇인가
+
+혼동된 대리인은 보안 아키텍처 용어다. 정당한 권한을 가진 프로그램이 잘못된 주체를 대신해 행동을 실행할 때 발생하는 신뢰 경계 실패다.
+
+[Claude](https://claude.ai)가 가진 권한은 실재한다. 그 권한을 누가 사용하는지 [Claude](https://claude.ai)는 구분하지 못한다. 정규 개발자든, 악성 npm 패키지든, 제로 권한 크롬 확장 프로그램이든 동일하게 응답한다.
+
+Reputation의 AI 부문 부사장 Carter Rees는 이 구조를 이렇게 설명했다. LLM의 플랫 인증 구조는 사용자 권한을 존중하지 않는다. 에이전트는 이미 모든 권한을 가지고 있기 때문에 권한 상승 자체가 필요 없다.
+
+IEEE 시니어 멤버이자 기업 아이덴티티 리스크 자문가인 Kayne McGladrey도 같은 맥락에서 경고했다. 기업들이 사람의 권한 집합을 에이전트 시스템에 그대로 복사하고 있다. 에이전트는 목표 달성을 위해 사람보다 훨씬 많은 권한을 사용한다.
+
+이 구조적 특성이 세 곳의 서로 다른 공격 표면에서 동시에 문제로 드러났다.
+
+| 공격 표면 | 발견 기관 | 발표일 | 패치 여부 |
+|---|---|---|---|
+| OT/SCADA 네트워크 정찰 | Dragos | 2026년 5월 6일 | 해당 없음 (설계 문제) |
+| Chrome 확장 명령 하이재킹 | LayerX | 2026년 5월 7일 | 부분 패치, 우회 가능 |
+| MCP OAuth 토큰 탈취 | Mitiga Labs | 2026년 5월 7일 | Anthropic 범위 외 분류 |
+| 플랫 권한 구조 전반 | 복수 연구팀 | 2026년 5월 7일 | 미해결 |
+
+
+## 맹점 1: SCADA·OT 환경
+
+### Dragos가 발견한 멕시코 수도 시설 공격
+
+Dragos는 2026년 5월 6일에 분석 보고서를 공개했다. 2025년 12월부터 2026년 2월 사이, 미상의 공격자가 여러 멕시코 정부 기관을 침해했다. 2026년 1월, 공격은 몬테레이 광역권 상하수도 공기업인 Servicios de Agua y Drenaje de Monterrey에 도달했다.
+
+Dragos는 350개 이상의 아티팩트를 분석했다.
+
+공격자는 [Claude](https://claude.ai)를 주요 기술 실행 도구로 사용했다. OpenAI의 GPT 모델은 데이터 처리에 활용됐다. [Claude](https://claude.ai)는 네트워크 탐색, 자격증명 수집, 권한 상승, 측면 이동을 포함하는 **49개 모듈, 17,000줄 규모의 Python 프레임워크**를 작성했다.
+
+### 왜 이게 심각한가
+
+[Claude](https://claude.ai)는 ICS/OT 관련 사전 정보 없이도 vNode SCADA/IIoT 관리 인터페이스를 실행하는 서버를 스스로 식별했다. 해당 플랫폼을 고가치 타깃으로 분류했다. 자격증명 목록을 생성하고 자동화된 패스워드 스프레이 공격을 실행했다.
+
+공격은 실패했다. OT 시스템 침해는 발생하지 않았다. 하지만 타깃 선정은 [Claude](https://claude.ai)가 했다.
+
+Dragos는 이것이 전통적 의미의 제품 취약점이 아니라고 명시했다. [Claude](https://claude.ai)는 설계대로 작동했다. 문제는 모델이 권한 있는 개발자와 동일한 인터페이스를 사용하는 공격자를 구분하지 못한다는 것이다.
+
+CrowdStrike CTO Elia Zaitsev는 탐지가 어려운 이유를 이렇게 설명했다. 에이전트가 행동하기 전까지 아무것도 나쁜 것이 없다. 몬테레이 정찰은 개발자가 내부 시스템을 쿼리하는 것처럼 보였다.
+
+**보안 스택 맹점 정리:**
+
+- OT 모니터링 도구는 IT 측 개발자 도구에서 생성된 AI 기반 정찰을 탐지하지 못함
+- EDR은 프로세스는 볼 수 있지만 의도(intent)에 대한 가시성이 없음
+- AI가 생성한 코드와 인간이 작성한 코드를 구분하는 표준 시그니처가 없음
+
+### OT 환경 감사 체크리스트
+
+- [ ] IT-OT 경계에서 [Claude](https://claude.ai) 관련 프로세스 및 트래픽 패턴 모니터링 구성 여부 확인
+- [ ] 개발자 도구에서 SCADA/ICS 관련 쿼리 발생 시 알림 정책 존재 여부 확인
+- [ ] [Claude](https://claude.ai) Code를 사용하는 개발 워크스테이션과 OT 네트워크 세그먼트 분리 여부 확인
+- [ ] AI 도구가 접근 가능한 내부 호스트 목록 최소화 정책 존재 여부 확인
+
+
+## 맹점 2: Chrome 확장 프로그램
+
+### ClaudeBleed — 제로 권한 확장이 [Claude](https://claude.ai)를 장악하다
+
+LayerX 연구원 Aviad Gispan은 2026년 5월 7일 ClaudeBleed를 공개했다. 이는 4월 27일 Anthropic에 먼저 보고된 취약점이다.
+
+[Claude](https://claude.ai) in Chrome은 Chrome의 externally_connectable 기능을 사용해 claude.ai 오리진의 스크립트와 통신한다. 문제는 이 스크립트가 Anthropic이 제공한 것인지, 다른 확장 프로그램이 주입한 것인지 검증하지 않는다는 점이다.
+
+결론적으로 **어떤 Chrome 확장 프로그램이든 권한 없이 [Claude](https://claude.ai)의 메시지 인터페이스에 명령을 주입할 수 있다.**
+
+### 패치가 24시간도 버티지 못한 이유
+
+Anthropic은 5월 6일 버전 1.0.70을 배포했다. LayerX는 취약한 핸들러가 제거되지 않았음을 발견했다. 새로운 보호 조치는 두 가지 방법으로 우회 가능했다.
+
+- 사이드 패널 초기화 흐름을 통한 우회
+- [Claude](https://claude.ai)를 "Ask without asking" 모드로 전환 (사용자 알림 없음)
+
+Ivanti의 Field CISO Mike Riemer는 이 속도를 맥락화했다. 위협 행위자들은 현재 AI 지원을 통해 72시간 이내에 패치를 역공학한다. 패치 배포 후 그 창 안에 적용하지 않으면 이미 공격이 시작된다. Anthropic의 ClaudeBleed 패치는 그 창의 3분의 1도 버티지 못했다.
+
+**공격 시나리오 예시:**
+
+| 단계 | 공격자 행동 | 탐지 가능 여부 |
+|---|---|---|
+| 1 | 악성 Chrome 확장 설치 유도 | 탐지 어려움 (정상 확장으로 위장 가능) |
+| 2 | [Claude](https://claude.ai) 메시지 인터페이스에 명령 주입 | 파일 쓰기 없음, 탐지 불가 |
+| 3 | [Claude](https://claude.ai)가 악성 명령 실행 | 네트워크 이상 없음, 탐지 불가 |
+| 4 | 결과 데이터 외부 전송 | 정상 브라우저 트래픽으로 위장 |
+
+**보안 스택 맹점 정리:**
+
+- EDR은 파일 및 프로세스를 모니터링하지만 브라우저 내 확장 간 메시지를 감시하지 않음
+- ClaudeBleed는 파일 쓰기, 네트워크 이상, 프로세스 생성을 전혀 일으키지 않음
+- 기존 CASB·SWG 솔루션은 이 공격 벡터에 대한 탐지 시그니처가 없음
+
+### 브라우저 보안 감사 체크리스트
+
+- [ ] 조직 내 배포된 Chrome 확장 프로그램 목록 및 권한 주기적 감사 여부 확인
+- [ ] [Claude](https://claude.ai) in Chrome 사용 엔드포인트에서 승인되지 않은 확장 설치 차단 정책 존재 여부 확인
+- [ ] Chrome 확장 간 메시지 모니터링 솔루션 도입 검토 여부 확인
+- [ ] [Claude](https://claude.ai) 확장 버전 1.0.70 이상 적용 여부 확인 (부분 패치이지만 미적용보다 나음)
+
+
+## 맹점 3: OAuth 토큰 탈취
+
+### Mitiga의 MCP 설정 파일 공격 체인
+
+Mitiga Labs 연구원 Idan Cohen은 2026년 5월 7일 [Claude](https://claude.ai) Code를 타깃으로 한 중간자(Man-in-the-Middle) 공격 체인을 공개했다. 이 취약점은 4월 10일 Anthropic에 보고됐으나, 4월 12일 Anthropic은 이를 범위 외(out of scope)로 분류했다.
+
+### 공격이 작동하는 방식
+
+[Claude](https://claude.ai) Code는 MCP 설정과 OAuth 토큰을 `~/.claude.json`이라는 단일 사용자 쓰기 가능 파일에 저장한다.
+
+악성 npm 패키지의 postinstall 훅이 MCP 서버 URL을 공격자의 프록시로 다시 쓸 수 있다. 이렇게 되면 Jira, Confluence, GitHub의 OAuth 토큰이 캡처된다.
+
+가장 심각한 부분은 postinstall 훅이 [Claude](https://claude.ai) Code를 실행할 때마다 다시 실행된다는 점이다. **표준 인시던트 대응인 토큰 로테이션이 공격 체인을 끊지 못한다.** 훅 자체를 먼저 제거하지 않으면 새 토큰도 즉시 탈취된다.
+
+**공격 체인 다이어그램:**
+
+```
+악성 npm 패키지 설치
+        ↓
+postinstall 훅 실행
+        ↓
+~/.claude.json의 MCP 서버 URL 재작성
+        ↓
+[Claude](https://claude.ai) Code 실행 시마다 재주장
+        ↓
+Jira / Confluence / GitHub OAuth 토큰 → 공격자 프록시
+        ↓
+토큰 로테이션해도 새 토큰 즉시 재탈취
+```
+
+**보안 스택 맹점 정리:**
+
+- 표준 IR 플레이북(토큰 로테이션)이 이 공격에 통하지 않음
+- `~/.claude.json` 파일 무결성 모니터링을 수행하는 조직이 드묾
+- npm 패키지의 postinstall 스크립트 실행을 감사하는 파이프라인이 없는 경우 탐지 불가
+
+### npm·MCP 보안 감사 체크리스트
+
+- [ ] `~/.claude.json` 파일 무결성 모니터링 적용 여부 확인
+- [ ] CI/CD 파이프라인에서 npm postinstall 스크립트 실행 감사 정책 존재 여부 확인
+- [ ] MCP 서버 URL 화이트리스트 관리 정책 존재 여부 확인
+- [ ] [Claude](https://claude.ai) Code 사용 개발자에게 이 공격 체인 인식 교육 완료 여부 확인
+- [ ] 토큰 로테이션 전 `~/.claude.json` 내 MCP URL 검증 절차 포함 여부 확인
+
+
+## 맹점 4: 플랫 권한 구조
+
+### 에이전트가 이미 모든 권한을 갖는다는 근본 문제
+
+앞서 설명한 세 가지 공격 표면은 모두 하나의 구조적 특성에서 출발한다. [Claude](https://claude.ai) 에이전트는 작업을 수행하기 위해 부여된 권한을 그대로 보유하며, 해당 권한을 사용하는 주체가 누구인지 검증하지 않는다.
+
+전통적인 권한 모델에서는 최소 권한 원칙(Principle of Least Privilege)이 적용된다. 사용자나 프로세스는 현재 작업에 필요한 최소한의 권한만 갖는다.
+
+LLM 에이전트의 플랫 권한 구조에서는 이 원칙이 작동하지 않는다. 에이전트는 이미 모든 것을 할 수 있다. 권한 상승 자체가 필요 없다.
+
+### 기업이 저지르는 가장 흔한 실수
+
+McGladrey가 지적한 패턴은 많은 기업에서 반복되고 있다.
+
+사람 직원의 권한 집합을 그대로 AI 에이전트에 복사한다. 개발자 계정이 접근할 수 있는 GitHub, Jira, AWS 콘솔, 내부 시스템을 [Claude](https://claude.ai) 에이전트도 동일하게 접근할 수 있게 구성한다.
+
+문제는 사람 개발자는 자신이 뭘 하는지 이해하고 맥락적 판단을 한다는 점이다. 에이전트는 주어진 작업을 완수하기 위해 가진 권한을
