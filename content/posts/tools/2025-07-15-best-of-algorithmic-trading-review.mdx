@@ -1,0 +1,57 @@
+---
+title: "best-of-algorithmic-trading: 알고리즘 트레이딩 오픈소스 프로젝트 109개를 한눈에"
+description: "알고리즘 트레이딩 관련 봇, 프레임워크, API, 지표, 교육 자료 등 109개 오픈소스 프로젝트를 품질 점수 기반으로 랭킹한 큐레이션 리스트 리뷰"
+date: 2025-07-15
+slug: 2025-07-15-best-of-algorithmic-trading-review
+tags: [algorithmic-trading, 퀀트, backtesting, trading-bots, Python, TypeScript, 오픈소스, curated-list, crypto, fintech, freqtrade, hummingbot, best-of]
+category: "tools"
+repo_url: "https://github.com/PlaceNL2026/best-of-algorithmic-trading"
+stars: 182
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"best-of-algorithmic-trading","url":"https://github.com/PlaceNL2026/best-of-algorithmic-trading","description":"algorithmic trading curated list quant finance trading bots backtesting technical analysis crypto open-source freqtrade hummingbot fintech Python TypeScript resources MCP quantopian-style rankings","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+# best-of-algorithmic-trading — 알고리즘 트레이딩 오픈소스 총집합
+
+best-of-algorithmic-trading은 알고리즘 트레이딩 생태계의 오픈소스 프로젝트 109개를 자동 품질 점수 기반으로 랭킹·큐레이션하는 리스트형 레포지토리다. 봇, 프레임워크, API 래퍼, 기술 지표 라이브러리, 서적, 강의, 커뮤니티까지 7개 카테고리를 아우르며, 합산 GitHub 스타 약 31만 개에 달하는 프로젝트들을 한 곳에서 탐색할 수 있게 해 준다.
+
+## 무엇을 해결하나
+
+퀀트 트레이딩에 진입하려는 개발자가 직면하는 가장 큰 장벽은 "어디서부터 볼 것인가"다. Freqtrade, Hummingbot, CCXT, TA-Lib 등 유명 프로젝트만 해도 수십 개이며, 유지보수가 중단된 프로젝트도 섞여 있다. 이 레포는 best-of-generator 자동화 파이프라인으로 GitHub 활동량, 패키지 매니저 통계, 라이선스 상태 등 공개 신호를 종합해 품질 점수(🥇🥈🥉)를 매기고, 정기적으로 갱신한다. 직접 수백 개 레포를 하나하나 비교할 필요가 없다.
+
+## 핵심 기능 3가지
+
+**1. 7개 카테고리 분류와 자동 랭킹** — Bots & Frameworks(23개), Libraries & API(28개), Technical Analysis & Indicators(10개), Books(19개), YouTube(10개), Courses(8개), Communities(3개)로 나눠 프로젝트를 정리한다. 각 프로젝트에는 스타 수, 트렌드(📈📉), 활동 상태(💤💀🐣) 아이콘이 붙어 한눈에 건강 상태를 파악할 수 있다.
+
+**2. projects.yaml 기반 기여 구조** — 새 프로젝트를 추천하려면 `projects.yaml` 파일을 직접 편집해 PR을 보내면 된다. 진입 장벽이 낮아 커뮤니티 주도 확장이 용이하다.
+
+**3. MCP·DeFi·크립토 포괄** — 전통 퀀트 금융뿐 아니라 DeFi 프로토콜, 크립토 거래소 연동, MCP(Model Context Protocol) 관련 프로젝트까지 포함해 최신 트렌드를 반영한다.
+
+## 사용 예시
+
+```bash
+# 로컬에서 리스트를 직접 빌드하고 싶다면
+git clone https://github.com/PlaceNL2026/best-of-algorithmic-trading.git
+cd best-of-algorithmic-trading
+
+# best-of-generator 설치 후 빌드
+pip install best-of
+best-of generate
+```
+
+생성된 `README.md`에서 카테고리별 랭킹을 확인하거나, `projects.yaml`을 수정해 자신만의 커스텀 리스트를 만들 수 있다.
+
+## 누구에게 유용한가
+
+- 알고리즘 트레이딩을 처음 시작하는 개발자가 검증된 출발점을 잡을 때
+- 퀀트 팀이 새 라이브러리를 평가하며 활성 유지 여부를 빠르게 스크리닝할 때
+- 크립토·DeFi 봇 개발자가 CCXT, Hummingbot 대안을 탐색할 때
+- 기술 블로거나 교육자가 추천 리소스 목록을 구성할 때
+
+## 한계
+
+큐레이션 리스트의 태생적 한계가 있다. 품질 점수는 GitHub 메트릭 중심이므로, 실제 트레이딩 수익률이나 전략 품질과는 무관하다. 비공개 소스나 상용 플랫폼(QuantConnect, Alpaca 유료 기능 등)은 범위 밖이다. 또한 정기 갱신 주기 사이에 프로젝트 상태가 변할 수 있으므로, 프로덕션 의존성으로 채택하기 전에는 반드시 라이선스와 최근 커밋 이력을 직접 확인해야 한다. 레포 자체 스타가 182개로 아직 초기 단계인 만큼, 카테고리별 깊이가 고르지 않은 부분도 존재한다.
+
+원문: https://github.com/PlaceNL2026/best-of-algorithmic-trading
