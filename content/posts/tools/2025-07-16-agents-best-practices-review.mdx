@@ -1,0 +1,71 @@
+---
+title: "agents-best-practices: 에이전트 하네스 설계를 위한 범용 스킬 레퍼런스"
+description: "Codex, Claude Code 등 에이전틱 도구에서 활용할 수 있는 프로바이더 중립 Agent Skill. 아키텍처, 루프, 보안, MVP 블루프린트까지 에이전트 설계 전반을 다룬다."
+date: 2025-07-16
+slug: 2025-07-16-agents-best-practices-review
+tags: ["ai-agents", "agentic-workflows", "claude-code", "codex", "mcp", "prompt-engineering", "에이전트 설계", "스킬"]
+category: "tools"
+repo_url: "https://github.com/DenisSergeevitch/agents-best-practices"
+stars: 94
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"agents-best-practices","url":"https://github.com/DenisSergeevitch/agents-best-practices","description":"Provider-neutral Agent Skill for Codex, Claude Code, and agentic harness design.","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+# agents-best-practices: 에이전트 하네스 설계의 표준 레퍼런스
+
+agents-best-practices는 Codex, Claude Code 등 `SKILL.md` 포맷을 지원하는 에이전틱 도구에 설치해 에이전트 하네스 설계·감사·리팩터링을 안내하는 프로바이더 중립 Agent Skill이다.
+
+## 무엇을 해결하나
+
+AI 에이전트를 프로덕션에 올리려면 단순히 LLM을 호출하는 것만으로는 부족하다. 루프 설계, 권한 통제, 컨텍스트 관리, 옵저버빌리티, 보안 체크리스트 등 하네스(harness) 전반을 체계적으로 잡아야 한다. 문제는 이런 지식이 블로그, 문서, 개인 경험에 파편화되어 있다는 점이다. agents-best-practices는 이 지식을 하나의 스킬 파일 세트로 구조화하고, Codex나 Claude Code 같은 에이전틱 IDE에서 바로 참조할 수 있게 만든다. 코딩 에이전트에 국한되지 않고 리서치, 운영, 법무, 의료, 교육 등 모든 도메인 워크플로 에이전트에 적용 가능하다.
+
+## 핵심 기능 3가지
+
+**1. 에이전트 하네스 아키텍처 가이드**
+모델을 감싸는 런타임 전체를 설계하는 방법론을 제공한다. 컨텍스트 윈도 관리, 툴 인터페이스, 퍼미션 레이어, 메모리 전략, 정지 조건, 옵저버빌리티까지 하네스를 구성하는 모든 축을 레퍼런스 파일로 분리해 필요한 것만 로드할 수 있다.
+
+**2. MVP 에이전트 블루프린트 빌더**
+도메인 요구사항을 입력하면 가장 작으면서도 프로덕션에 안전한 에이전트 청사진을 생성하는 구조를 안내한다. 자율성 수준, 필요한 툴, 권한 범위, 평가(eval) 기준, 런치 크라이테리아를 포함한다.
+
+**3. 에이전틱 루프 및 보안 체크리스트**
+모델 호출 → 툴 호출 → 검증 → 권한 확인 → 실행 → 관찰 → 다음 스텝이라는 코어 루프를 명확히 정의하고, 각 단계에서 적용해야 할 보안·가드레일 체크리스트를 제공한다.
+
+## 설치 및 사용
+
+Codex에 설치하는 경우:
+
+```sh
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+git clone https://github.com/DenisSergeevitch/agents-best-practices.git \
+  "${CODEX_HOME:-$HOME/.codex}/skills/agents-best-practices"
+```
+
+Claude Code 개인 스킬로 설치하는 경우:
+
+```sh
+mkdir -p "$HOME/.claude/skills"
+git clone https://github.com/DenisSergeevitch/agents-best-practices.git \
+  "$HOME/.claude/skills/agents-best-practices"
+```
+
+설치 후 IDE를 재시작하면 스킬 인덱스가 리로드되며, `SKILL.md`를 엔트리포인트로 참조가 시작된다. 업데이트는 해당 디렉터리에서 `git pull --ff-only`만 실행하면 된다.
+
+## 누구에게 유용한가
+
+- 에이전틱 워크플로를 처음 설계하는 개발자: 아키텍처 레퍼런스를 빠르게 참조할 수 있다.
+- 기존 에이전트를 감사·리팩터링하려는 팀: 체크리스트 기반으로 빠진 부분을 체계적으로 점검한다.
+- Codex, Claude Code를 적극 활용하는 실무자: 스킬 포맷으로 설치해 IDE 내에서 곧바로 활용 가능하다.
+- 비코딩 도메인(법무, 의료, 교육 등)에 에이전트를 도입하려는 기획자에게도 하네스 패턴이 유효하다.
+
+## 한계
+
+- 실제 코드 프레임워크가 아니라 가이드·레퍼런스 문서 모음이다. 직접 에이전트를 생성해주지는 않는다.
+- SKILL.md 포맷을 지원하지 않는 도구에서는 수동으로 문서를 읽어야 한다.
+- 스타 94개 수준의 초기 프로젝트로 커뮤니티 피드백이 아직 제한적이며, 레퍼런스 내용의 검증 범위가 명확하지 않다.
+- 특정 프레임워크(LangGraph, CrewAI 등)에 대한 구체적 통합 가이드는 포함되어 있지 않다.
+
+---
+
+원문: https://github.com/DenisSergeevitch/agents-best-practices
