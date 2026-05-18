@@ -1,0 +1,65 @@
+---
+title: "Claude Mythos AI Anthropic App – Anthropic Claude 모델용 오픈소스 데스크톱/모바일 클라이언트 리뷰"
+description: "Claude Mythos APP은 Anthropic의 Claude 모델을 위한 크로스플랫폼 오픈소스 클라이언트로, 창작 글쓰기·롤플레이·고급 추론에 최적화된 Mythos 디자인 인터페이스를 제공한다."
+date: 2025-07-16
+slug: 2025-07-16-claude-mythos-ai-anthropic-app-review
+tags: ["claude", "anthropic", "LLM 프론트엔드", "open-source", "roleplay", "creative-writing", "electron", "tauri", "claude-opus", "claude-sonnet"]
+category: "tools"
+repo_url: "https://github.com/AbhishekK130804/Claude-Mythos-AI-Anthropic-App"
+stars: 209
+---
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Claude-Mythos-AI-Anthropic-App","url":"https://github.com/AbhishekK130804/Claude-Mythos-AI-Anthropic-App","description":"Claude pro free Mythos design Opus Cowork  Sonnet AI Anthropic App: download free PC android apk iOS, Anthropic Claude API key setup, Claude roleplay mythos client, SillyTavern Claude prompt formatting, custom system prompt jailbreak, Mythos AI creative writing app, Claude 3.5 Sonnet Opus API cost, open source LLM frontend, Claude reverse proxy ","applicationCategory":"DeveloperApplication","operatingSystem":"Any"}
+</script>
+
+**Claude Mythos APP은 Anthropic의 Claude 3.5 Sonnet·Opus 모델을 로컬 환경에서 활용할 수 있게 해주는 크로스플랫폼 오픈소스 LLM 프론트엔드 클라이언트다.** Windows, macOS, Linux는 물론 Android APK와 iOS까지 지원하며, "Mythos"라는 이름답게 독자적인 다크 UI 미학을 앞세운다. C# 기반 레포지만 내부적으로 Python·Rust 백엔드와 Next.js + Electron/Tauri 프론트엔드를 결합한 하이브리드 구조를 취한다.
+
+## 무엇을 해결하나
+
+Anthropic의 공식 웹 인터페이스는 간결하지만, 롤플레이·장문 창작·커스텀 시스템 프롬프트 관리 등 고급 시나리오에서는 제약이 크다. SillyTavern 같은 서드파티 프론트엔드가 존재하지만 설정 난이도가 높고, 모바일 지원이 미흡하다. Claude Mythos APP은 이 간극을 메운다. 자체 API 키만 있으면 어떤 디바이스에서든 Claude 모델에 접근할 수 있고, 프롬프트 포맷팅·리버스 프록시·로컬 암호화 채팅 저장 등을 한 곳에서 처리할 수 있다.
+
+## 핵심 기능 3가지
+
+### 1. Mythos 다크 UI + 멀티플랫폼
+
+전용 다크 인터페이스는 장시간 사용에 최적화됐다. Electron과 Tauri 이중 빌드를 지원하므로 가벼운 바이너리(Tauri)와 풍부한 플러그인 생태계(Electron) 중 선택할 수 있다. Android APK를 직접 배포해 모바일에서도 동일한 경험을 제공한다.
+
+### 2. 롤플레이·창작 글쓰기 특화
+
+캐릭터 카드 불러오기, 장문 스토리 세션 유지, 커스텀 시스템 프롬프트·"탈옥" 스타일 프리셋 관리 기능이 내장돼 있다. SillyTavern 호환 프롬프트 포맷을 지원하므로 기존 프리셋을 그대로 가져올 수 있다.
+
+### 3. 프라이버시 중심 설계
+
+모든 대화는 로컬에 암호화 저장된다. 리버스 프록시 설정을 지원해 API 키 노출 리스크를 줄이고, 외부 서버에 데이터가 전송되지 않는다.
+
+## 설치 및 사용
+
+일반 사용자는 릴리즈 ZIP을 내려받아 바로 실행할 수 있다.
+
+```bash
+# 개발자 설치
+git clone --recursive https://github.com/AbhishekK130804/Claude-Mythos-AI-Anthropic-App.git
+cd Claude-Mythos-AI-Anthropic-App
+
+# 의존성 설치
+pip install -r requirements.txt
+
+# 실행
+python main.py
+```
+
+실행 후 Settings에서 Anthropic API 키를 입력하면 즉시 Claude 3.5 Sonnet, Opus 등 원하는 모델을 선택해 대화를 시작할 수 있다. 시스템 프롬프트 프리셋은 UI 내 Prompt Manager에서 추가·편집한다.
+
+## 누구에게 유용한가
+
+- **창작 작가·롤플레이 유저**: 긴 컨텍스트 윈도와 캐릭터 카드 지원이 핵심 매력이다.
+- **AI 도구 커스터마이징에 관심 있는 개발자**: 오픈소스이므로 프론트엔드를 포크해 자체 워크플로에 맞게 확장할 수 있다.
+- **프라이버시를 중시하는 사용자**: 클라우드에 대화 로그를 남기고 싶지 않은 경우 로컬 저장·리버스 프록시 조합이 실용적이다.
+
+## 한계
+
+- Star 209개 수준으로 커뮤니티 규모가 아직 작다. 이슈 대응과 장기 유지보수가 보장되지 않는다.
+- 레포 언어가 C#으로 표기되지만, 실제 스택은 Python·Rust·Next.js 혼합이라 기여 진입 장벽이 높다.
+- **반드시 유료 Anthropic API 키가 필요하다.** 앱 자체는 무료지만 모델 사용 비용은 별도로 발생한다.
+- 릴리즈가 단일 ZIP으로만 제공돼 플랫폼별 서명
